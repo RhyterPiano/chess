@@ -11,7 +11,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
         // Here I need to implement code that will add the correct set of moves to the myMoves variable
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        while (++row < 8 && ++col < 8) {
+        while (++row <= 8 && ++col <= 8) {
 //            row++; col++;
             ChessPosition newPosition = new ChessPosition(row, col);
             if (this.board.getPiece(newPosition) == null) {
@@ -27,7 +27,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
         }
         row = myPosition.getRow();
         col = myPosition.getColumn();
-        while (++row < 8 && --col >= 0) {
+        while (++row <= 8 && --col >= 1) {
 //            row++; col--;
             ChessPosition newPosition = new ChessPosition(row, col);
             if (this.board.getPiece(newPosition) == null) {
@@ -43,7 +43,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
         }
         row = myPosition.getRow();
         col = myPosition.getColumn();
-        while (--row >= 0 && --col >= 0) {
+        while (--row >= 1 && --col >= 1) {
 //            row--; col--;
             ChessPosition newPosition = new ChessPosition(row, col);
             if (this.board.getPiece(newPosition) == null) {
@@ -59,7 +59,7 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
         }
         row = myPosition.getRow();
         col = myPosition.getColumn();
-        while (--row >= 0 && ++col < 8) {
+        while (--row >= 1 && ++col <= 8) {
 //            row--; col++;
             ChessPosition newPosition = new ChessPosition(row, col);
             if (this.board.getPiece(newPosition) == null) {
