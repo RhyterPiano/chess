@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 /**
  * Represents a single square position on a chess board
  * <p>
@@ -33,5 +35,13 @@ public class ChessPosition {
     @Override
     public String toString() {
         return "[" + this.row + "," + this.col + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ChessPosition other) {
+            return this.row == other.getRow() && this.col == other.getColumn();
+        }
+        return false;
     }
 }
