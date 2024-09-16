@@ -54,7 +54,17 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        BishopMovesCalculator myMoves = new BishopMovesCalculator(board, myPosition);
+        PieceMovesCalculator myMoves;
+        switch (myType) {
+            case BISHOP -> myMoves = new BishopMovesCalculator(board, myPosition);
+            case KING -> myMoves = new KingMovesCalculator(board, myPosition);
+//            case KNIGHT -> myMoves = new KnightMovesCalculator(board, myPosition);
+            case PAWN -> myMoves = new PawnMovesCalculator(board, myPosition);
+//            case QUEEN -> myMoves = new QueenMovesCalculator(board, myPosition);
+//            case ROOK -> myMoves = new RookMovesCalculator(board, myPosition);
+            default -> myMoves = new PieceMovesCalculator(board, myPosition);
+        }
+
         return myMoves.pieceMoves();
     }
 }
