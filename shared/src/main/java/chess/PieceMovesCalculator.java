@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class PieceMovesCalculator {
     public ChessBoard board;
@@ -24,6 +21,18 @@ public class PieceMovesCalculator {
         if (row > 8 || row < 1) {
             return false;
         } else return col <= 8 && col >= 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PieceMovesCalculator that)) return false;
+        return Objects.equals(board, that.board) && Objects.equals(myPosition, that.myPosition) && Objects.equals(myMoves, that.myMoves);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, myPosition, myMoves);
     }
 }
 

@@ -38,10 +38,22 @@ public class ChessPosition {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ChessPosition other) {
-            return this.row == other.getRow() && this.col == other.getColumn();
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessPosition that)) return false;
+        return row == that.row && col == that.col;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (obj instanceof ChessPosition other) {
+//            return this.row == other.getRow() && this.col == other.getColumn();
+//        }
+//        return false;
+//    }
 }
