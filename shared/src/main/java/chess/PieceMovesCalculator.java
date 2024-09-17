@@ -17,5 +17,13 @@ public class PieceMovesCalculator {
     public Collection<ChessMove> pieceMoves() {
         return myMoves;
     }
+
+    public boolean inBounds(ChessPosition newPosition) {
+        int row = newPosition.getRow();
+        int col = newPosition.getColumn();
+        if (row > 8 || row < 1) {
+            return false;
+        } else return col <= 8 && col >= 1;
+    }
 }
 
