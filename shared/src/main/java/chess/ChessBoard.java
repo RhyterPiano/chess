@@ -10,9 +10,9 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] board = new ChessPiece[8][8];
+    private final ChessPiece[][] board = new ChessPiece[8][8];
     public ChessBoard() {
-
+        resetBoard();
     }
 
     /**
@@ -29,7 +29,17 @@ public class ChessBoard {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessBoard that)) return false;
-        return Objects.deepEquals(board, that.board);
+        //return Objects.deepEquals(board, that.board);
+        for (int myRow = 1; myRow <= 8; myRow++) {
+            for (int myPiece = 1; myPiece <= 8; myPiece++) {
+                ChessPosition thisPosition = new ChessPosition(myRow, myPiece);
+                ChessPiece thisPiece = this.getPiece(thisPosition);
+                if (thisPiece != null && !thisPiece.equals(that.getPiece(thisPosition))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -76,13 +86,32 @@ public class ChessBoard {
         this.board[0][3] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
 
         //The Black pieces
-        this.board[7][0] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
-        this.board[7][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
-        this.board[7][1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
-        this.board[7][6] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
-        this.board[7][5] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
-        this.board[7][2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
-        this.board[7][4] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
-        this.board[7][3] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        this.board[7][0] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+        this.board[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+        this.board[7][1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        this.board[7][6] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        this.board[7][5] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        this.board[7][2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        this.board[7][4] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+        this.board[7][3] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder myString = new StringBuilder();
+        for (ChessPiece[] myRow : board ) {
+            myString.append("\n");
+            for (ChessPiece myPiece : myRow) {
+                myString.append("|");
+                if (myPiece != null) {
+                    myString.append(myPiece.toString());
+                } else {
+                    myString.append(" ");
+                }
+            }
+            myString.append("|");
+        }
+        myString.append("|");
+        return myString.toString();
     }
 }
