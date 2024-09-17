@@ -60,7 +60,7 @@ public class ChessPiece {
             case KING -> myMoves = new KingMovesCalculator(board, myPosition);
             case KNIGHT -> myMoves = new KnightMovesCalculator(board, myPosition);
             case PAWN -> myMoves = new PawnMovesCalculator(board, myPosition);
-//            case QUEEN -> myMoves = new QueenMovesCalculator(board, myPosition);
+            case QUEEN -> myMoves = new QueenMovesCalculator(board, myPosition);
             case ROOK -> myMoves = new RookMovesCalculator(board, myPosition);
             default -> myMoves = new PieceMovesCalculator(board, myPosition);
         }
