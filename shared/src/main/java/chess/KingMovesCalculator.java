@@ -9,8 +9,22 @@ public class KingMovesCalculator extends PieceMovesCalculator {
      public void createMoves() {
          int row = myPosition.getRow();
          int col = myPosition.getColumn();
-         int[] i = {-1, 1, 0};
-         int[] j = {-1, 1, 0};
+         int[] i;
+         if (row == 8) {
+             i = new int[]{-1, 0};
+         } else if (row == 1) {
+             i = new int[]{0, 1};
+         } else {
+             i = new int[]{-1, 1, 0};
+         }
+         int[] j;
+         if (col == 1) {
+             j = new int[]{1, 0};
+         } else if (col == 8) {
+             j = new int[]{-1, 0};
+         } else {
+            j = new int[]{-1, 1, 0};
+            }
          ChessPiece me = board.getPiece(myPosition);
          for (int mod : i) {
              for (int mod2 : j) {
