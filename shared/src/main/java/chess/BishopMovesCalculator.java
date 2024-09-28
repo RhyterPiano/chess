@@ -8,69 +8,39 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
     }
 
     public void createMoves() {
-        // Here I need to implement code that will add the correct set of moves to the myMoves variable
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        while (++row <= 8 && ++col <= 8) {
-//            row++; col++;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            if (this.board.getPiece(newPosition) == null) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-            } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(newPosition).getTeamColor()) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-                break;
-            } else {
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        while (++row <= 8 && --col >= 1) {
-//            row++; col--;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            if (this.board.getPiece(newPosition) == null) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-            } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(newPosition).getTeamColor()) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-                break;
-            } else {
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        while (--row >= 1 && --col >= 1) {
-//            row--; col--;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            if (this.board.getPiece(newPosition) == null) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-            } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(newPosition).getTeamColor()) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-                break;
-            } else {
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        while (--row >= 1 && ++col <= 8) {
-//            row--; col++;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            if (this.board.getPiece(newPosition) == null) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-            } else if (board.getPiece(myPosition).getTeamColor() != board.getPiece(newPosition).getTeamColor()) {
-                ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                myMoves.add(myMove);
-                break;
-            } else {
-                break;
+        ChessPosition newPosition;
+        int[] i = {-1, 1};
+        int[] j = {-1, 1};
+        for (int mod1 : i) {
+            for (int mod2 : j) {
+                newPosition = new ChessPosition(row + mod1, col + mod2);
+                while (newPosition.inBounds()) {
+                    ChessPiece other = board.getPiece(newPosition);
+                    if (other == null) {
+                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
+                        myMoves.add(myMove);
+                        newPosition = new ChessPosition(newPosition.getRow() + mod1, newPosition.getColumn() + mod2);
+                    } else if (other.getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
+                        myMoves.add(myMove);
+                        break;
+                    } else break;
+                }
+                newPosition = new ChessPosition(row + mod2, col + mod1);
+                while (newPosition.inBounds()) {
+                    ChessPiece other = board.getPiece(newPosition);
+                    if (other == null) {
+                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
+                        myMoves.add(myMove);
+                        newPosition = new ChessPosition(newPosition.getRow() + mod2, newPosition.getColumn() + mod1);
+                    } else if (other.getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
+                        myMoves.add(myMove);
+                        break;
+                    } else break;
+                }
             }
         }
     }

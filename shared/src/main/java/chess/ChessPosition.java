@@ -11,6 +11,7 @@ import java.util.Objects;
 public class ChessPosition {
     private final int row;
     private final int col;
+
     public ChessPosition(int row, int col) {
         this.row = row;
         this.col = col;
@@ -21,20 +22,19 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        return this.row;
+        return row;
     }
 
-    /**
-     * @return which column this position is in
-     * 1 codes for the left row
-     */
-    public int getColumn() {
-        return this.col;
+    public boolean inBounds() {
+        return (row <= 8 && row >= 1) && (col <= 8 && col >= 1);
     }
 
     @Override
     public String toString() {
-        return "[" + this.row + "," + this.col + "]";
+        return "[" +
+                row +
+                "," + col +
+                ']';
     }
 
     @Override
@@ -49,11 +49,11 @@ public class ChessPosition {
         return Objects.hash(row, col);
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (obj instanceof ChessPosition other) {
-//            return this.row == other.getRow() && this.col == other.getColumn();
-//        }
-//        return false;
-//    }
+    /**
+     * @return which column this position is in
+     * 1 codes for the left row
+     */
+    public int getColumn() {
+        return col;
+    }
 }

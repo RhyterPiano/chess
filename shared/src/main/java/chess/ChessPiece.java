@@ -1,7 +1,5 @@
 package chess;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -12,13 +10,14 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
+    PieceType myType;
+    ChessGame.TeamColor myColor;
+    Collection<ChessMove> myMoves;
 
-    private final ChessGame.TeamColor pieceColor;
-    private final PieceType myType;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
-        this.pieceColor = pieceColor;
-        this.myType = type;
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType myType) {
+        this.myType = myType;
+        this.myColor = pieceColor;
     }
 
     /**
@@ -37,7 +36,7 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return this.pieceColor;
+        return myColor;
     }
 
     /**
@@ -48,9 +47,21 @@ public class ChessPiece {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessPiece that)) return false;
+        return myType == that.myType && myColor == that.myColor && Objects.equals(myMoves, that.myMoves);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myType, myColor, myMoves);
+    }
+
+    @Override
     public String toString() {
         String myString = null;
-        if (pieceColor == ChessGame.TeamColor.WHITE) {
+        if (myColor == ChessGame.TeamColor.WHITE) {
             switch(myType) {
                 case ROOK -> myString = "r";
                 case KING -> myString = "k";
@@ -59,7 +70,7 @@ public class ChessPiece {
                 case PAWN -> myString = "p";
                 case KNIGHT -> myString = "n";
             }
-        } else if (pieceColor == ChessGame.TeamColor.BLACK){
+        } else if (myColor == ChessGame.TeamColor.BLACK){
             switch(myType) {
                 case ROOK -> myString = "R";
                 case KING -> myString = "K";
@@ -72,18 +83,6 @@ public class ChessPiece {
         return myString;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChessPiece that)) return false;
-        return pieceColor == that.pieceColor && myType == that.myType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pieceColor, myType);
-    }
-
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -92,18 +91,15 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceMovesCalculator myMoves;
-        switch (myType) {
-            case BISHOP -> myMoves = new BishopMovesCalculator(board, myPosition);
-            case KING -> myMoves = new KingMovesCalculator(board, myPosition);
-            case KNIGHT -> myMoves = new KnightMovesCalculator(board, myPosition);
-            case PAWN -> myMoves = new PawnMovesCalculator(board, myPosition);
-            case QUEEN -> myMoves = new QueenMovesCalculator(board, myPosition);
-            case ROOK -> myMoves = new RookMovesCalculator(board, myPosition);
-            default -> myMoves = new PieceMovesCalculator(board, myPosition);
-        }
 
-        return myMoves.pieceMoves();
+        switch(myType) {
+            case ROOK -> myMoves = new RookMovesCalculator(board, myPosition).getMoves();
+            case BISHOP -> myMoves = new BishopMovesCalculator(board, myPosition).getMoves();
+            case PAWN -> myMoves = new PawnMovesCalculator(board, myPosition).getMoves();
+            case KNIGHT -> myMoves = new KnightMovesCalculator(board, myPosition).getMoves();
+            case KING -> myMoves = new KingMovesCalculator(board, myPosition).getMoves();
+            case QUEEN -> myMoves = new QueenMovesCalculator(board, myPosition).getMoves();
+        }
+        return myMoves;
     }
 }
-

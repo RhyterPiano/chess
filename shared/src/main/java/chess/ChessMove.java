@@ -9,9 +9,10 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-    private final ChessPosition startPosition;
-    private final ChessPosition endPosition;
-    private final ChessPiece.PieceType promotionPiece;
+    ChessPosition startPosition;
+    ChessPosition endPosition;
+    ChessPiece.PieceType promotionPiece;
+
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
@@ -23,38 +24,20 @@ public class ChessMove {
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        return this.startPosition;
+        return startPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        return this.endPosition;
-    }
-
-    /**
-     * Gets the type of piece to promote a pawn to if pawn promotion is part of this
-     * chess move
-     *
-     * @return Type of piece to promote a pawn to, or null if no promotion
-     */
-    public ChessPiece.PieceType getPromotionPiece() {
-        return this.promotionPiece;
+        return endPosition;
     }
 
     @Override
     public String toString() {
         return endPosition.toString();
     }
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (obj instanceof ChessMove newMove) {
-//            return startPosition.equals(newMove.startPosition) && endPosition.equals(newMove.endPosition);
-//        }
-//        return false;
-//    }
 
     @Override
     public boolean equals(Object o) {
@@ -66,5 +49,15 @@ public class ChessMove {
     @Override
     public int hashCode() {
         return Objects.hash(startPosition, endPosition, promotionPiece);
+    }
+
+    /**
+     * Gets the type of piece to promote a pawn to if pawn promotion is part of this
+     * chess move
+     *
+     * @return Type of piece to promote a pawn to, or null if no promotion
+     */
+    public ChessPiece.PieceType getPromotionPiece() {
+        return promotionPiece;
     }
 }
