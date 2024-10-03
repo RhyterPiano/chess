@@ -49,21 +49,6 @@ public class ChessBoard {
         return Objects.deepEquals(board, that.board);
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof ChessBoard that)) return false;
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                ChessPosition other = new ChessPosition(i + 1, j + 1);
-//                if (board[i][j] != that.getPiece(other)){
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
-
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(board);
@@ -84,7 +69,7 @@ public class ChessBoard {
             }
             myString.append("|");
         }
-        myString.append("|\n");
+        myString.append("|");
         return myString.toString();
     }
 
