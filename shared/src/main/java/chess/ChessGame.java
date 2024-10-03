@@ -13,6 +13,8 @@ public class ChessGame {
     private TeamColor teamTurn;
     private Collection<ChessMove> validMoves = new HashSet<>();
     private ChessBoard board;
+    private Collection<Collection<ChessMove>> whiteMoves = new HashSet<>();
+    private Collection<Collection<ChessMove>> blackMoves = new HashSet<>();
 
     public ChessGame() {
 
