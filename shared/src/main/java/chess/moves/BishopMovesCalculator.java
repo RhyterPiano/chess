@@ -1,4 +1,8 @@
-package chess;
+package moves.chess;
+
+import chess.ChessBoard;
+import chess.ChessPosition;
+import chess.PieceMovesCalculator;
 
 public class BishopMovesCalculator extends PieceMovesCalculator {
 
