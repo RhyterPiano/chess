@@ -53,7 +53,8 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Still needs implemented
-        Collection<ChessMove> validMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        Collection<ChessMove> myMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
+
         return validMoves;
     }
 
@@ -71,6 +72,37 @@ public class ChessGame {
         } else throw new InvalidMoveException();
     }
 
+    private ChessPosition findKing(TeamColor teamColor) {
+        // iterate board
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                    return position;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean containsPosition(ChessPosition myPosition, TeamColor color) {
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition newPosition = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(newPosition);
+                if (piece != null && piece.getTeamColor() != color) {
+                    // If error, change piece.pieceMoves to be validMoves(newPosition)
+                    Collection<ChessMove> moves = piece.pieceMoves(board, newPosition);
+                    for (ChessMove move : moves) {
+                        if (move.getEndPosition() == myPosition) return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -78,7 +110,9 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPosition = findKing(teamColor);
+        return containsPosition(kingPosition, teamColor);
+        // Possible error from using pieceMoves instead of validMoves.
     }
 
     /**
