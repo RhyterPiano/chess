@@ -54,15 +54,13 @@ public class ChessGame {
 
     private boolean isValid(ChessMove move) {
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        // make a copy of the board, perform move, check for check, get return value. Return false if that is false, else return true.
-        ChessGame gameCopy = this.makeCopy();
         try {
+            ChessGame gameCopy = this.makeCopy();
             gameCopy.makeMove(move);
-            if (gameCopy.isInCheck(piece.getTeamColor())) return false;
+            return true;
         } catch (InvalidMoveException ex) {
-            System.out.println("Swallowed InvalidMoveException on line 54");
+            return false;
         }
-        return true;
     }
 
     @Override
@@ -108,10 +106,18 @@ public class ChessGame {
 //        } else throw new InvalidMoveException();
 //    }
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (isValid(move)) {
+        if (board == null || board.getPiece(move.getStartPosition()) == null) {
+            throw new InvalidMoveException();
+        }
+        if (board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition()).contains(move)) {
+            ChessGame gameCopy = this.makeCopy();
             ChessPiece piece = board.getPiece(move.getStartPosition());
             board.addPiece(move.getEndPosition(), piece);
             board.removePiece(move.getStartPosition());
+            if (isInCheck(piece.getTeamColor())) {
+                this.board = gameCopy.getBoard();
+                throw new InvalidMoveException();
+            }
         } else throw new InvalidMoveException();
     }
 
