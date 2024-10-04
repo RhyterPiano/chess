@@ -52,17 +52,6 @@ public class ChessGame {
         return chessCopy;
     }
 
-    private boolean isValid(ChessMove move) {
-        ChessPiece piece = board.getPiece(move.getStartPosition());
-        try {
-            ChessGame gameCopy = this.makeCopy();
-            gameCopy.makeMove(move);
-            return true;
-        } catch (InvalidMoveException ex) {
-            return false;
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +62,18 @@ public class ChessGame {
     @Override
     public int hashCode() {
         return Objects.hash(teamTurn, board);
+    }
+
+    private boolean isValid(ChessMove move) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        try {
+            ChessGame gameCopy = this.makeCopy();
+            gameCopy.setTeamTurn(piece.getTeamColor());
+            gameCopy.makeMove(move);
+            return true;
+        } catch (InvalidMoveException ex) {
+            return false;
+        }
     }
 
     /**
@@ -121,7 +122,13 @@ public class ChessGame {
                 this.board = gameCopy.getBoard();
                 throw new InvalidMoveException();
             }
+            if (piece.getTeamColor() != teamTurn) {
+                throw new InvalidMoveException();
+            }
         } else throw new InvalidMoveException();
+        if (teamTurn == TeamColor.WHITE) {
+            teamTurn = TeamColor.BLACK;
+        } else teamTurn = TeamColor.WHITE;
     }
 
     private ChessPosition findKing(TeamColor teamColor) {
