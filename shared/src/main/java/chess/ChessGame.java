@@ -112,6 +112,9 @@ public class ChessGame {
         if (board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition()).contains(move)) {
             ChessGame gameCopy = this.makeCopy();
             ChessPiece piece = board.getPiece(move.getStartPosition());
+            if (move.getPromotionPiece() != null) {
+                piece.promote(move.getPromotionPiece());
+            }
             board.addPiece(move.getEndPosition(), piece);
             board.removePiece(move.getStartPosition());
             if (isInCheck(piece.getTeamColor())) {

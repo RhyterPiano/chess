@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 public class ChessPiece {
     private PieceType myType;
-    private ChessGame.TeamColor myColor;
+    private final ChessGame.TeamColor myColor;
     private Collection<ChessMove> myMoves;
 
 
@@ -46,16 +46,22 @@ public class ChessPiece {
         return myType;
     }
 
+    public void promote(PieceType newType) {
+        if (myType == PieceType.PAWN) {
+            myType = newType;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessPiece that)) return false;
-        return myType == that.myType && myColor == that.myColor && Objects.equals(myMoves, that.myMoves);
+        return myType == that.myType && myColor == that.myColor;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myType, myColor, myMoves);
+        return Objects.hash(myType, myColor);
     }
 
     @Override
