@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -10,11 +11,11 @@ import java.util.HashSet;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private TeamColor teamTurn;
-    private Collection<ChessMove> validMoves = new HashSet<>();
+    private TeamColor teamTurn = TeamColor.WHITE;
+//    private Collection<ChessMove> validMoves = new HashSet<>();
     private ChessBoard board;
-    private Collection<Collection<ChessMove>> whiteMoves = new HashSet<>();
-    private Collection<Collection<ChessMove>> blackMoves = new HashSet<>();
+//    private Collection<Collection<ChessMove>> whiteMoves = new HashSet<>();
+//    private Collection<Collection<ChessMove>> blackMoves = new HashSet<>();
 
     public ChessGame() {
 
@@ -44,6 +45,38 @@ public class ChessGame {
         BLACK
     }
 
+    public ChessGame makeCopy() {
+        ChessGame chessCopy = new ChessGame();
+        chessCopy.setTeamTurn(teamTurn);
+        chessCopy.setBoard(board.makeCopy());
+        return chessCopy;
+    }
+
+    private boolean isValid(ChessMove move) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        // make a copy of the board, perform move, check for check, get return value. Return false if that is false, else return true.
+        ChessGame gameCopy = this.makeCopy();
+        try {
+            gameCopy.makeMove(move);
+            if (gameCopy.isInCheck(piece.getTeamColor())) return false;
+        } catch (InvalidMoveException ex) {
+            System.out.println("Swallowed InvalidMoveException on line 54");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessGame chessGame)) return false;
+        return teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamTurn, board);
+    }
+
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -53,8 +86,12 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Still needs implemented
-        Collection<ChessMove> myMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
-
+        Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new HashSet<>();
+        for (ChessMove move : moves) {
+            if (board.getPiece(move.getStartPosition()) != null && isValid(move)) validMoves.add(move);
+            // may need to add implementation later to account for which turn it is!
+        }
         return validMoves;
     }
 
@@ -64,10 +101,16 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
+//    public void makeMove(ChessMove move) throws InvalidMoveException {
+//        if (board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition()).contains(move)) {
+//            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+//            board.removePiece(move.getStartPosition());
+//        } else throw new InvalidMoveException();
+//    }
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition()).contains(move)) {
-            //make the move
-            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        if (isValid(move)) {
+            ChessPiece piece = board.getPiece(move.getStartPosition());
+            board.addPiece(move.getEndPosition(), piece);
             board.removePiece(move.getStartPosition());
         } else throw new InvalidMoveException();
     }
@@ -95,7 +138,7 @@ public class ChessGame {
                     // If error, change piece.pieceMoves to be validMoves(newPosition)
                     Collection<ChessMove> moves = piece.pieceMoves(board, newPosition);
                     for (ChessMove move : moves) {
-                        if (move.getEndPosition() == myPosition) return true;
+                        if (move.getEndPosition().equals(myPosition)) return true;
                     }
                 }
             }

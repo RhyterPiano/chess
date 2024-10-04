@@ -49,6 +49,22 @@ public class ChessBoard {
         return Objects.deepEquals(board, that.board);
     }
 
+    public ChessBoard makeCopy() {
+        ChessBoard newBoard = new ChessBoard();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] != null) {
+                    ChessGame.TeamColor color = board[i][j].getTeamColor();
+                    ChessPiece.PieceType type = board[i][j].getPieceType();
+                    ChessPiece newPiece = new ChessPiece(color, type);
+                    ChessPosition position = new ChessPosition(i + 1, j + 1);
+                    newBoard.addPiece(position, newPiece);
+                }
+            }
+        }
+        return newBoard;
+    }
+
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(board);
@@ -69,7 +85,7 @@ public class ChessBoard {
             }
             myString.append("|");
         }
-        myString.append("|");
+        myString.append("\n");
         return myString.toString();
     }
 
