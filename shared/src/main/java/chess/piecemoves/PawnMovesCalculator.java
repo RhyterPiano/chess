@@ -1,6 +1,6 @@
-package chess;
+package chess.piecemoves;
 
-import java.net.http.WebSocketHandshakeException;
+import chess.*;
 
 public class PawnMovesCalculator extends PieceMovesCalculator {
 
