@@ -1,8 +1,9 @@
 package server.handlers;
 
-import server.requests.*;
-import server.requests.Request;
+import server.service.requests.Request;
 
-public interface Handlers {
-    void register(Request request);
+public abstract class Handlers {
+    Handlers () {
+
+    }
 }
