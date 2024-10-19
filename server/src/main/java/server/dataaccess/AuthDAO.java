@@ -5,10 +5,10 @@ import model.AuthData;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class AuthDAO {
+public class AuthDAO extends DAO {
     private Collection<AuthData> authDataCollection = new HashSet<>();
 
-    AuthDAO() {
+    public AuthDAO() {
     }
 
     public void createAuth() {
@@ -24,5 +24,7 @@ public class AuthDAO {
         //remove the auth data from the collection
     }
 
-
+    @Override
+    public void clear() {
+    }
 }

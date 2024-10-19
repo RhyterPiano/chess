@@ -1,8 +1,16 @@
 package server;
 
+import server.handlers.*;
 import spark.*;
+import server.dataaccess.DB;
 
 public class Server {
+    private ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();
+    private CreateGameHandler createGameHandler = new CreateGameHandler();
+    private JoinGameHandler joinGameHandler = new JoinGameHandler();
+    private ListGameHandler listGameHandler = new ListGameHandler();
+    private LoginHandler loginHandler = new LoginHandler();
+    private LogoutHandler logoutHandler = new LogoutHandler();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
