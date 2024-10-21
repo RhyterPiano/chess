@@ -2,29 +2,40 @@ package server.dataaccess;
 
 import model.AuthData;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 public class AuthDAO extends DAO {
-    private Collection<AuthData> authDataCollection = new HashSet<>();
 
     public AuthDAO() {
     }
 
-    public void createAuth() {
-        //create a new auth token
+    public String createAuth() {
+        return UUID.randomUUID().toString();
+    }
+
+    public void addAuthData(AuthData authData) {
+        db.addAuth(authData);
+    }
+
+    public HashMap<String, AuthData>  getAuthData() {
+        return db.getAuthData();
     }
 
     public AuthData getAuth(String authToken) {
-        //find the authorization of an auth token.
-        return null;
+        return db.getAuth(authToken);
+    }
+
+    public HashMap<String, AuthData> getAuthTokens() {
+        return db.getAuthData();
     }
 
     public void deleteAuth(AuthData authData) {
-        //remove the auth data from the collection
+        db.removeAuth(authData);
     }
 
     @Override
     public void clear() {
+        db.setAuthTokens(new HashMap<>());
     }
+
 }

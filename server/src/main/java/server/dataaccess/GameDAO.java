@@ -1,34 +1,33 @@
 package server.dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
-import model.UserData;
 import org.eclipse.jetty.server.Authentication;
 
 import java.util.*;
 
 public class GameDAO extends DAO {
-    //storage for Users, games, and authTokens
-
-
-
+    private Random random = new Random();
     public GameDAO() {
     }
 
     public void createGame(String gameName) {
-        //generate gameID
-        //create the game info and add game to the gamedata.
+        int gameID = random.nextInt();
+        GameData game = new GameData(gameID, null, null, gameName, new ChessGame());
+        db.addGame(game);
     }
 
-    public Map<Integer, GameData> listGames() {
-        return Map.of();
+    public HashMap<Integer, GameData> listGames() {
+        return db.getGames();
     }
 
-    public void updateGame(int gameID) {
-        //takes the gameID an updates it
+    public void updateGame(int gameID, GameData game) {
+        // Some code to check if the game exists or not might not be a bad idea.
+        db.setGame(gameID, game);
     }
 
     @Override
     public void clear() {
-
+        db.setGames(new HashMap<>());
     }
 }

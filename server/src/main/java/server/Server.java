@@ -1,8 +1,12 @@
 package server;
 
+import com.google.gson.Gson;
+import model.UserData;
 import server.handlers.*;
 import spark.*;
 import server.dataaccess.DB;
+
+import java.util.HashMap;
 
 public class Server {
     private ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();
@@ -42,43 +46,57 @@ public class Server {
 
     private void clearApplicationInit() {
         Spark.delete("/db", (req, res) -> {
-            return 400;
+            clearApplicationHandler.clearAll();
+            res.type("application/json");;
+            HashMap<String, Object> emptyResponse = new HashMap<>();
+            return new Gson().toJson(emptyResponse);
         });
     }
 
     private void registerInit() {
         Spark.post("/user", (req, res) -> {
-            return 400;
+            loginHandler.toString(); //change this to be implemented when needed
+            UserData userData = new UserData("name", "pass", "email@email.com");
+            return new Gson().toJson(userData);
         });
     }
 
     private void loginInit() {
         Spark.post("/session", (req, res) -> {
-            return 400;
+            loginHandler.toString();
+            UserData userData = new UserData("name", "pass", "email@email.com");
+            res.status(401);
+            return new Gson().toJson(userData);
         });
     }
 
     private void logoutInit() {
         Spark.delete("/session", (req, res) -> {
-            return 400;
+            logoutHandler.toString();
+            HashMap<String, Object> emptyResponse = new HashMap<>();
+            return new Gson().toJson(emptyResponse);
         });
     }
 
     private void listGamesInit() {
         Spark.get("/game", (req, res) -> {
-            return 400;
+            listGameHandler.toString();
+            HashMap<String, Object> emptyResponse = new HashMap<>();
+            return new Gson().toJson(emptyResponse);
         });
     }
 
     private void createGameInit() {
         Spark.post("/game", (req, res) -> {
-            return 400;
+            HashMap<String, Object> emptyResponse = new HashMap<>();
+            return new Gson().toJson(emptyResponse);
         });
     }
 
     private void joinGameInit() {
         Spark.put("/game", (req, res) -> {
-            return 400;
+            HashMap<String, Object> emptyResponse = new HashMap<>();
+            return new Gson().toJson(emptyResponse);
         });
     }
 
