@@ -63,9 +63,8 @@ public class Server {
 
     private void loginInit() {
         Spark.post("/session", (req, res) -> {
-            loginHandler.toString();
+            res = loginHandler.loginUser(req, res);
             UserData userData = new UserData("name", "pass", "email@email.com");
-            res.status(401);
             return new Gson().toJson(userData);
         });
     }

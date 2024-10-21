@@ -1,6 +1,5 @@
 package server.handlers;
 
-
 import server.dataaccess.AuthDAO;
 import server.dataaccess.GameDAO;
 import server.dataaccess.UserDAO;
