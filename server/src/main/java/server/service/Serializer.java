@@ -10,13 +10,15 @@ import spark.Request;
 public class Serializer {
 
     public LoginRequest deserializeLogin(Request request) {
-        return new Gson().fromJson(String.valueOf(request), LoginRequest.class);
+        return new Gson().fromJson(request.body(), LoginRequest.class);
     }
 
     public String serializeError(ErrorResult error) {
         return new Gson().toJson(error);
     }
 
-    public JsonArray serializeLogin(LoginResult loginResult)
+    public String serializeLogin(LoginResult loginResult) {
+        return new Gson().toJson(loginResult);
+    }
 
 }

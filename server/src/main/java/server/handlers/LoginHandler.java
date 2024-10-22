@@ -11,13 +11,15 @@ public class LoginHandler extends Handlers {
     private UserService userService = new UserService();
     private Serializer serializer = new Serializer();
 
-    public LoginResult loginUser(Request request, Response response) throws DataAccessException{
+    public String loginUser(Request request, Response response) {
         LoginRequest loginRequest = serializer.deserializeLogin(request);
         try {
-            return userService.login(loginRequest);
+            LoginResult loginResult = userService.login(loginRequest);
+            return serializer.serializeLogin(loginResult);
         } catch (DataAccessException e) {
             response.status(401);
-            throw e;
+            ErrorResult error = new ErrorResult("User not found");
+            return serializer.serializeError(error);
         }
     }
 }

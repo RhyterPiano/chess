@@ -68,13 +68,8 @@ public class Server {
 
     private void loginInit() {
         Spark.post("/session", (req, res) -> {
-            try {
-                LoginResult loginResult = loginHandler.loginUser(req, res);
-                return res;
-            } catch (DataAccessException e) {
-                ErrorResult error = new ErrorResult("User does not exist");
-                return serializer.serializeError(error);
-            }
+            res.type("application/json");
+            return loginHandler.loginUser(req, res);
         });
     }
 

@@ -10,8 +10,8 @@ import server.dataaccess.UserDAO;
 import server.service.results.*;
 
 public class UserService {
-    private UserDAO userDAO;
-    private AuthDAO authDAO;
+    private UserDAO userDAO = new UserDAO();
+    private AuthDAO authDAO = new AuthDAO();
 
     public UserService() {
         userDAO = new UserDAO();
