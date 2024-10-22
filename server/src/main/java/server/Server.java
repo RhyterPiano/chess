@@ -68,9 +68,7 @@ public class Server {
     private void loginInit() {
         Spark.post("/session", (req, res) -> {
             res.type("application/json");
-            String result = loginHandler.loginUser(req, res);
-            System.out.println(result);
-            return result;
+            return loginHandler.loginUser(req, res);
         });
     }
 
@@ -83,9 +81,8 @@ public class Server {
 
     private void listGamesInit() {
         Spark.get("/game", (req, res) -> {
-            listGameHandler.toString();
-            HashMap<String, Object> emptyResponse = new HashMap<>();
-            return new Gson().toJson(emptyResponse);
+            res.type("application/json");
+            rerturn listGameHandler.listGames();
         });
     }
 
@@ -98,8 +95,8 @@ public class Server {
 
     private void joinGameInit() {
         Spark.put("/game", (req, res) -> {
-            HashMap<String, Object> emptyResponse = new HashMap<>();
-            return new Gson().toJson(emptyResponse);
+            res.type("application/json");
+            return joinGameHandler.joinGame(req, res);
         });
     }
 

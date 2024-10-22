@@ -18,12 +18,15 @@ public class GameDAO extends DAO {
         return gameID;
     }
 
+    public GameData getGame(int gameID) {
+        return db.getGame(gameID);
+    }
+
     public HashMap<Integer, GameData> listGames() {
         return db.getGames();
     }
 
     public void updateGame(int gameID, GameData game) {
-        // Some code to check if the game exists or not might not be a bad idea.
         db.setGame(gameID, game);
     }
 

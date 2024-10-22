@@ -23,6 +23,10 @@ public class Serializer {
         return new Gson().fromJson(request.body(), CreateGameRequest.class);
     }
 
+    public JoinGameRequest deserializeJoinGame(Request request) {
+        return new Gson().fromJson(request.body(), JoinGameRequest.class);
+    }
+
     public String serializeError(ErrorResult error) {
         return new Gson().toJson(error);
     }
