@@ -5,6 +5,7 @@ import server.dataaccess.GameDAO;
 import server.dataaccess.UserDAO;
 import server.service.Serializer;
 import server.service.UserService;
+import server.service.results.ErrorResult;
 
 public abstract class Handlers {
     protected static UserDAO userDAO = new UserDAO();
@@ -15,5 +16,12 @@ public abstract class Handlers {
 
     Handlers () {
 
+    }
+
+    ErrorResult checkAuth(String authToken) {
+        if (authDAO.getAuth(authToken) == null) {
+            return new ErrorResult("Error: unauthorized");
+        }
+        return null;
     }
 }

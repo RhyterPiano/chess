@@ -91,8 +91,8 @@ public class Server {
 
     private void createGameInit() {
         Spark.post("/game", (req, res) -> {
-            HashMap<String, Object> emptyResponse = new HashMap<>();
-            return new Gson().toJson(emptyResponse);
+            res.type("application/json");
+            return createGameHandler.createGame(req, res);
         });
     }
 

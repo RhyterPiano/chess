@@ -7,14 +7,15 @@ import org.eclipse.jetty.server.Authentication;
 import java.util.*;
 
 public class GameDAO extends DAO {
-    private Random random = new Random();
+    private final Random random = new Random();
     public GameDAO() {
     }
 
-    public void createGame(String gameName) {
-        int gameID = random.nextInt();
+    public int createGame(String gameName) {
+        int gameID = Math.abs(random.nextInt());
         GameData game = new GameData(gameID, null, null, gameName, new ChessGame());
         db.addGame(game);
+        return gameID;
     }
 
     public HashMap<Integer, GameData> listGames() {
