@@ -10,8 +10,7 @@ import server.service.requests.JoinGameRequest;
 import server.service.results.CreateGameResult;
 import server.service.results.ListGamesResult;
 
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 
 public class GameService {
     GameDAO gameDAO = new GameDAO();
@@ -26,33 +25,37 @@ public class GameService {
     }
 
     public void joinGame(JoinGameRequest request, String userName) throws DataAccessException {
-        gameDAO.getGame(request.gameID());
         GameData game = gameDAO.getGame(request.gameID());
-        addUser(request.playerColor(), game, userName);
+        game = addUser(request.playerColor(), game, userName);
         gameDAO.updateGame(request.gameID(), game);
     }
 
-    private void addUser(ChessGame.TeamColor teamColor, GameData game, String userName) throws DataAccessException {
+    private GameData addUser(ChessGame.TeamColor teamColor, GameData game, String userName) throws DataAccessException {
         switch (teamColor) {
             case WHITE: {
                 if (game.whiteUsername() == null) {
-                    game = game.updateWhiteUser(userName);
+                    return game.updateWhiteUser(userName);
                 } else {
                     throw new DataAccessException("User Already Exists");
                 }
             }
             case BLACK: {
                 if (game.blackUsername() == null) {
-                    game = game.updateBlackUser(userName);
+                    return game.updateBlackUser(userName);
                 } else {
                     throw new DataAccessException("User Already Exists");
                 }
             }
-
         }
+        return null;
     }
 
-    public ListGamesResult listGames() {
-        return gameDAO.listGames();
+    public Collection<GameData> listGames() {
+        LinkedHashMap<Integer, GameData> games = gameDAO.listGames();
+        ArrayList<GameData> gameList = new ArrayList<>();
+        for (GameData game : games.values()) {
+            gameList.add(game.updateGame(null));
+        }
+        return gameList;
     }
 }

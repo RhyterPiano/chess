@@ -1,10 +1,13 @@
 package server.handlers;
 
+import model.GameData;
 import server.service.GameService;
 import server.service.results.ErrorResult;
 import server.service.results.ListGamesResult;
 import spark.Request;
 import spark.Response;
+
+import java.util.Collection;
 
 public class ListGameHandler extends Handlers {
     GameService gameService = new GameService();
@@ -16,8 +19,9 @@ public class ListGameHandler extends Handlers {
             ErrorResult error = new ErrorResult("Error, unauthorized");
             return serializer.serializeError(error);
         }
-        ListGamesResult listGamesResult = gameService.listGames();
-
+        Collection<GameData> games = gameService.listGames();
+        ListGamesResult listGamesResult = new ListGamesResult(games);
+        return serializer.serializeListGames(listGamesResult);
     }
 
 }

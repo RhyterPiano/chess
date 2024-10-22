@@ -3,11 +3,12 @@ package server.dataaccess;
 import model.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class DB {
     //Temporarily used to store the data that I will later use.
     private HashMap<String, UserData> users = new HashMap<>();
-    private HashMap<Integer, GameData> games = new HashMap<>();
+    private LinkedHashMap<Integer, GameData> games = new LinkedHashMap<>();
     private HashMap<String, AuthData> authTokens = new HashMap<String, AuthData>();
 
     public HashMap<String, UserData> getUsers() {
@@ -18,7 +19,7 @@ public class DB {
         return users.get(username);
     }
 
-    public HashMap<Integer, GameData> getGames() {
+    public LinkedHashMap<Integer, GameData> getGames() {
         return games;
     }
 
@@ -58,7 +59,7 @@ public class DB {
         this.users = users;
     }
 
-    public void setGames(HashMap<Integer, GameData> games) {
+    public void setGames(LinkedHashMap<Integer, GameData> games) {
         this.games = games;
     }
 

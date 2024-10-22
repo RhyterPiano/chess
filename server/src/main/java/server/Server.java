@@ -82,7 +82,7 @@ public class Server {
     private void listGamesInit() {
         Spark.get("/game", (req, res) -> {
             res.type("application/json");
-            rerturn listGameHandler.listGames();
+            return listGameHandler.listGames(req, res);
         });
     }
 

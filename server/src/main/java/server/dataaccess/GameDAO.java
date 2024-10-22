@@ -22,7 +22,7 @@ public class GameDAO extends DAO {
         return db.getGame(gameID);
     }
 
-    public HashMap<Integer, GameData> listGames() {
+    public LinkedHashMap<Integer, GameData> listGames() {
         return db.getGames();
     }
 
@@ -32,6 +32,6 @@ public class GameDAO extends DAO {
 
     @Override
     public void clear() {
-        db.setGames(new HashMap<>());
+        db.setGames(new LinkedHashMap<>());
     }
 }

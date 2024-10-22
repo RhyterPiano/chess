@@ -1,8 +1,8 @@
 package server.service.results;
 
-import server.dataaccess.GameDAO;
+import model.GameData;
 
 import java.util.Collection;
 
-public record ListGamesResult(Collection<GameDAO> gameData) {
+public record ListGamesResult(Collection<GameData> games) {
 }

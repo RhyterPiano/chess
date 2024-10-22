@@ -39,6 +39,11 @@ public class Serializer {
         return new Gson().toJson(createGameResult);
     }
 
+    public String serializeListGames(ListGamesResult listGamesResult) {
+        String result = new Gson().toJson(listGamesResult);
+        return result;
+    }
+
     public String serializeEmpty() {
         HashMap<String, Object> emptyResponse = new HashMap<>();
         return new Gson().toJson(emptyResponse);
