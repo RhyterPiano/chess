@@ -17,11 +17,14 @@ public class UserService {
         userDAO = new UserDAO();
     }
 
-    public AuthData register(RegisterRequest request) throws DataAccessException {
+    public RegisterResult register(RegisterRequest request) throws DataAccessException {
         userDAO.userExists(request);
-        //create the user and add the data to the db
-        //create the auth data, then return the register result
-        return null;
+        UserData userData = new UserData(request.username(), request.password(), request.email());
+        String authToken = authDAO.createAuth();
+        AuthData authData = new AuthData(authToken, request.username());
+        authDAO.addAuthData(authData);
+        userDAO.addUser(userData);
+        return new RegisterResult(authData.username(), authData.authToken());
     }
 
     public LoginResult login(LoginRequest request) throws DataAccessException {

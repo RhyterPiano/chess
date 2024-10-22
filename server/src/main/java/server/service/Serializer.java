@@ -13,6 +13,10 @@ public class Serializer {
         return new Gson().fromJson(request.body(), LoginRequest.class);
     }
 
+    public RegisterRequest deserializeRegister(Request request) {
+        return new Gson().fromJson(request.body(), RegisterRequest.class);
+    }
+
     public String serializeError(ErrorResult error) {
         return new Gson().toJson(error);
     }

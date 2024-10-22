@@ -22,4 +22,17 @@ public class LoginHandler extends Handlers {
             return serializer.serializeError(error);
         }
     }
+
+    public String registerUser(Request req, Response res) {
+        RegisterRequest registerRequest = serializer.deserializeRegister(req);
+        try {
+            RegisterResult registerResult = userService.register(registerRequest);
+            LoginResult result = new LoginResult(registerResult.username(), registerResult.authToken());
+            return serializer.serializeLogin(result);
+        } catch (DataAccessException e) {
+            res.status(403);
+            ErrorResult error = new ErrorResult("Already Taken");
+            return serializer.serializeError(error);
+        }
+    }
 }
