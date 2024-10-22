@@ -31,6 +31,12 @@ public class GameService {
     }
 
     private GameData addUser(ChessGame.TeamColor teamColor, GameData game, String userName) throws DataAccessException {
+        if (teamColor == null) {
+            throw new DataAccessException("teamColor is null");
+        }
+        if (game == null) {
+            throw new DataAccessException("gameID is null");
+        }
         switch (teamColor) {
             case WHITE: {
                 if (game.whiteUsername() == null) {

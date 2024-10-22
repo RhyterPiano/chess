@@ -24,8 +24,14 @@ public class JoinGameHandler extends Handlers {
             gameService.joinGame(joinGameRequest, authDAO.getAuth(authToken).username());
             return serializer.serializeEmpty();
         } catch (DataAccessException e) {
-            res.status(403);
-            ErrorResult error = new ErrorResult("Error: Already Taken");
+            ErrorResult error;
+            if (e.getMessage().contains("User")) {
+                res.status(403);
+                error = new ErrorResult("Error: Already Taken");
+            } else {
+                res.status(400);
+                error = new ErrorResult("Error: Null teamColor");
+            }
             return serializer.serializeError(error);
         }
     }
