@@ -29,13 +29,16 @@ public class UserService {
 
     public LoginResult login(LoginRequest request) throws DataAccessException {
         UserData userData = userDAO.getUser(request.username());
-        if (userData != null) {
-            String authToken = authDAO.createAuth();
-            AuthData authData = new AuthData(authToken, request.username());
-            authDAO.addAuthData(authData);
-            return new LoginResult(authData.username(), authData.authToken());
+        if (userData == null) {
+            throw new DataAccessException("Error: User does not exist");
         }
-        throw new DataAccessException("User does not exist");
+        if (!userData.password().equals(request.password())) {
+            throw new DataAccessException("Error: Incorrect password");
+        }
+        String authToken = authDAO.createAuth();
+        AuthData authData = new AuthData(authToken, request.username());
+        authDAO.addAuthData(authData);
+        return new LoginResult(authData.username(), authData.authToken());
     }
 
     public void logout(AuthData auth) {

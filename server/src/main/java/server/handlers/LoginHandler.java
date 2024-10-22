@@ -18,7 +18,7 @@ public class LoginHandler extends Handlers {
             return serializer.serializeLogin(loginResult);
         } catch (DataAccessException e) {
             response.status(401);
-            ErrorResult error = new ErrorResult("User not found");
+            ErrorResult error = new ErrorResult("Error: User not Found");
             return serializer.serializeError(error);
         }
     }
@@ -31,7 +31,7 @@ public class LoginHandler extends Handlers {
             return serializer.serializeLogin(result);
         } catch (DataAccessException e) {
             res.status(403);
-            ErrorResult error = new ErrorResult("Already Taken");
+            ErrorResult error = new ErrorResult("Error: Already Taken");
             return serializer.serializeError(error);
         }
     }

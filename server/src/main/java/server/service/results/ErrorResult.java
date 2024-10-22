@@ -1,4 +1,4 @@
 package server.service.results;
 
-public record ErrorResult(String errorMessage) {
+public record ErrorResult(String message) {
 }

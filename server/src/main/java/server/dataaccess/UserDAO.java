@@ -34,7 +34,7 @@ public class UserDAO extends DAO {
 
     public void userExists(RegisterRequest request) throws DataAccessException {
         if (db.getUsers().containsKey(request.username())) {
-            throw new DataAccessException("Username already exists");
+            throw new DataAccessException("Error: Username already exists");
         }
     }
 

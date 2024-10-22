@@ -68,7 +68,9 @@ public class Server {
     private void loginInit() {
         Spark.post("/session", (req, res) -> {
             res.type("application/json");
-            return loginHandler.loginUser(req, res);
+            String result = loginHandler.loginUser(req, res);
+            System.out.println(result);
+            return result;
         });
     }
 
