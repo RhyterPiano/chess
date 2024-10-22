@@ -20,6 +20,9 @@ public class UserService {
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
         userDAO.userExists(request);
         UserData userData = new UserData(request.username(), request.password(), request.email());
+        if (userData.password() == null || userData.email() == null) {
+            throw new DataAccessException("Insufficient register info");
+        }
         String authToken = authDAO.createAuth();
         AuthData authData = new AuthData(authToken, request.username());
         authDAO.addAuthData(authData);

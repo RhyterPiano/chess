@@ -30,8 +30,14 @@ public class LoginHandler extends Handlers {
             LoginResult result = new LoginResult(registerResult.username(), registerResult.authToken());
             return serializer.serializeLogin(result);
         } catch (DataAccessException e) {
-            res.status(403);
-            ErrorResult error = new ErrorResult("Error: Already Taken");
+            ErrorResult error;
+            if (e.getMessage().contains("info")) {
+                res.status(400);
+                error = new ErrorResult("Error: Insufficient Data Provided");
+            } else {
+                res.status(403);
+                error = new ErrorResult("Error: Already Taken");
+            }
             return serializer.serializeError(error);
         }
     }
