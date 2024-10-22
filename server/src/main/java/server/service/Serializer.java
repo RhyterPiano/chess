@@ -7,6 +7,8 @@ import server.service.results.ErrorResult;
 import server.service.results.LoginResult;
 import spark.Request;
 
+import java.util.HashMap;
+
 public class Serializer {
 
     public LoginRequest deserializeLogin(Request request) {
@@ -25,4 +27,8 @@ public class Serializer {
         return new Gson().toJson(loginResult);
     }
 
+    public String serializeEmpty() {
+        HashMap<String, Object> emptyResponse = new HashMap<>();
+        return new Gson().toJson(emptyResponse);
+    }
 }

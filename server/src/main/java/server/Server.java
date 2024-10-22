@@ -76,9 +76,8 @@ public class Server {
 
     private void logoutInit() {
         Spark.delete("/session", (req, res) -> {
-            logoutHandler.toString();
-            HashMap<String, Object> emptyResponse = new HashMap<>();
-            return new Gson().toJson(emptyResponse);
+            res.type("application/json");
+            return logoutHandler.logoutUser(req, res);
         });
     }
 

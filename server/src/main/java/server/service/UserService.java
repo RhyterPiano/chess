@@ -44,7 +44,8 @@ public class UserService {
         return new LoginResult(authData.username(), authData.authToken());
     }
 
-    public void logout(AuthData auth) {
+    public void logout(String authToken) throws DataAccessException{
+        authDAO.removeAuth(authToken);
 
     }
 }
