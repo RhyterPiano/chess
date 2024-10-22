@@ -60,9 +60,8 @@ public class Server {
 
     private void registerInit() {
         Spark.post("/user", (req, res) -> {
-            loginHandler.registerUser(req, res); //change this to be implemented when needed
-            UserData userData = new UserData("name", "pass", "email@email.com");
-            return new Gson().toJson(userData);
+            res.type("application/json");
+            return loginHandler.registerUser(req, res); //change this to be implemented when needed
         });
     }
 
