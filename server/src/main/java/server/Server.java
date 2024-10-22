@@ -2,7 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import model.UserData;
+import server.dataaccess.DataAccessException;
 import server.handlers.*;
+import server.service.Serializer;
+import server.service.results.ErrorResult;
+import server.service.results.LoginResult;
 import spark.*;
 import server.dataaccess.DB;
 
@@ -15,6 +19,7 @@ public class Server {
     private ListGameHandler listGameHandler = new ListGameHandler();
     private LoginHandler loginHandler = new LoginHandler();
     private LogoutHandler logoutHandler = new LogoutHandler();
+    private Serializer serializer = new Serializer();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -63,9 +68,13 @@ public class Server {
 
     private void loginInit() {
         Spark.post("/session", (req, res) -> {
-            res = loginHandler.loginUser(req, res);
-            UserData userData = new UserData("name", "pass", "email@email.com");
-            return new Gson().toJson(userData);
+            try {
+                LoginResult loginResult = loginHandler.loginUser(req, res);
+                return res;
+            } catch (DataAccessException e) {
+                ErrorResult error = new ErrorResult("User does not exist");
+                return serializer.serializeError(error);
+            }
         });
     }
 

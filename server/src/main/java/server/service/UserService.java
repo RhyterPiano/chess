@@ -24,14 +24,15 @@ public class UserService {
         return null;
     }
 
-    public LoginResult login(LoginRequest request) {
+    public LoginResult login(LoginRequest request) throws DataAccessException {
         UserData userData = userDAO.getUser(request.username());
         if (userData != null) {
             String authToken = authDAO.createAuth();
             AuthData authData = new AuthData(authToken, request.username());
             authDAO.addAuthData(authData);
+            return new LoginResult(authData.username(), authData.authToken());
         }
-        return null;
+        throw new DataAccessException("User does not exist");
     }
 
     public void logout(AuthData auth) {
