@@ -2,11 +2,18 @@ package server.service;
 import server.dataaccess.*;
 
 public class ClearApplicationService {
-    ClearApplicationService() {
+    UserDAO userDAO = new UserDAO();
+    GameDAO gameDAO = new GameDAO();
+    AuthDAO authDAO = new AuthDAO();
+
+    public ClearApplicationService() {
 
     }
 
-    public void clearAll() {
-        //code to clear everything back to normal
+    public UserDAO clearAll() {
+        userDAO.clear();
+        gameDAO.clear();
+        authDAO.clear();
+        return userDAO;
     }
 }

@@ -1,14 +1,15 @@
 package server.handlers;
 
+import server.service.ClearApplicationService;
+
 public class ClearApplicationHandler extends Handlers {
+    ClearApplicationService clearApplicationService = new ClearApplicationService();
 
     public ClearApplicationHandler() {
 
     }
 
     public void clearAll() {
-        userDAO.clear();
-        gameDAO.clear();
-        authDAO.clear();
+        clearApplicationService.clearAll();
     }
 }
