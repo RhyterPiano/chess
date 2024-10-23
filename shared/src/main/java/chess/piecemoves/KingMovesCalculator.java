@@ -21,12 +21,14 @@ public class KingMovesCalculator extends PieceMovesCalculator {
         for (int mod1 : i) {
             for (int mod2 : j) {
                 newPosition = new ChessPosition(row + mod1, col + mod2);
-                if (newPosition.inBounds() && (board.getPiece(newPosition) == null || board.getPiece(newPosition).getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
+                if (newPosition.inBounds() && (board.getPiece(newPosition) == null ||
+                        board.getPiece(newPosition).getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
                     myMove = new ChessMove(myPosition, newPosition, null);
                     myMoves.add(myMove);
                 }
                 newPosition = new ChessPosition(row + mod2, col + mod1);
-                if (newPosition.inBounds() && (board.getPiece(newPosition) == null || board.getPiece(newPosition).getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
+                if (newPosition.inBounds() && (board.getPiece(newPosition) == null ||
+                        board.getPiece(newPosition).getTeamColor() != board.getPiece(myPosition).getTeamColor())) {
                     myMove = new ChessMove(myPosition, newPosition, null);
                     myMoves.add(myMove);
                 }

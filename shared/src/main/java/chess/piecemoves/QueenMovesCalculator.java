@@ -29,7 +29,9 @@ public class QueenMovesCalculator extends PieceMovesCalculator {
                     ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                     myMoves.add(myMove);
                     break;
-                } else break;
+                } else {
+                    break;
+                }
             }
             newPosition = new ChessPosition(row, col + mod);
             while (newPosition.inBounds()) {
@@ -41,7 +43,9 @@ public class QueenMovesCalculator extends PieceMovesCalculator {
                     ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                     myMoves.add(myMove);
                     break;
-                } else break;
+                } else {
+                    break;
+                }
             }
         }
         //bishop moves
@@ -60,7 +64,9 @@ public class QueenMovesCalculator extends PieceMovesCalculator {
                         ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                         myMoves.add(myMove);
                         break;
-                    } else break;
+                    } else {
+                        break;
+                    }
                 }
                 newPosition = new ChessPosition(row + mod2, col + mod1);
                 while (newPosition.inBounds()) {
@@ -73,7 +79,9 @@ public class QueenMovesCalculator extends PieceMovesCalculator {
                         ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                         myMoves.add(myMove);
                         break;
-                    } else break;
+                    } else {
+                        break;
+                    }
                 }
             }
         }

@@ -56,8 +56,12 @@ public class ChessPiece {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChessPiece that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ChessPiece that)) {
+            return false;
+        }
         return myType == that.myType && myColor == that.myColor;
     }
 
@@ -87,7 +91,9 @@ public class ChessPiece {
                 case PAWN -> myString = "P";
                 case KNIGHT -> myString = "N";
             }
-        } else myString = " ";
+        } else {
+            myString = " ";
+        }
         return myString;
     }
 

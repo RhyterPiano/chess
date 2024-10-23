@@ -54,8 +54,12 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChessGame chessGame)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ChessGame chessGame)) {
+            return false;
+        }
         return teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
     }
 
@@ -84,12 +88,12 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        // Still needs implemented
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new HashSet<>();
         for (ChessMove move : moves) {
-            if (board.getPiece(move.getStartPosition()) != null && isValid(move)) validMoves.add(move);
-            // may need to add implementation later to account for which turn it is!
+            if (board.getPiece(move.getStartPosition()) != null && isValid(move)) {
+                validMoves.add(move);
+            }
         }
         return validMoves;
     }
@@ -100,12 +104,6 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-//    public void makeMove(ChessMove move) throws InvalidMoveException {
-//        if (board.getPiece(move.getStartPosition()).pieceMoves(board, move.getStartPosition()).contains(move)) {
-//            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
-//            board.removePiece(move.getStartPosition());
-//        } else throw new InvalidMoveException();
-//    }
     public void makeMove(ChessMove move) throws InvalidMoveException {
         if (board == null || board.getPiece(move.getStartPosition()) == null) {
             throw new InvalidMoveException();
@@ -125,10 +123,14 @@ public class ChessGame {
             if (piece.getTeamColor() != teamTurn) {
                 throw new InvalidMoveException();
             }
-        } else throw new InvalidMoveException();
+        } else {
+            throw new InvalidMoveException();
+        }
         if (teamTurn == TeamColor.WHITE) {
             teamTurn = TeamColor.BLACK;
-        } else teamTurn = TeamColor.WHITE;
+        } else {
+            teamTurn = TeamColor.WHITE;
+        }
     }
 
     private ChessPosition findKing(TeamColor teamColor) {
@@ -145,7 +147,9 @@ public class ChessGame {
     }
 
     private boolean containsPosition(ChessPosition myPosition, TeamColor color) {
-        if (board == null) return false;
+        if (board == null) {
+            return false;
+        }
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition newPosition = new ChessPosition(i, j);
@@ -154,7 +158,9 @@ public class ChessGame {
                     // If error, change piece.pieceMoves to be validMoves(newPosition)
                     Collection<ChessMove> moves = piece.pieceMoves(board, newPosition);
                     for (ChessMove move : moves) {
-                        if (move.getEndPosition().equals(myPosition)) return true;
+                        if (move.getEndPosition().equals(myPosition)) {
+                            return true;
+                        }
                     }
                 }
             }

@@ -27,7 +27,9 @@ public class RookMovesCalculator extends PieceMovesCalculator {
                     ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                     myMoves.add(myMove);
                     break;
-                } else break;
+                } else {
+                    break;
+                }
             }
             newPosition = new ChessPosition(row, col + mod);
             while (newPosition.inBounds()) {
@@ -39,7 +41,9 @@ public class RookMovesCalculator extends PieceMovesCalculator {
                     ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                     myMoves.add(myMove);
                     break;
-                } else break;
+                } else {
+                    break;
+                }
             }
         }
     }

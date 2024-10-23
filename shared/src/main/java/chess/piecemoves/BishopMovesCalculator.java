@@ -31,7 +31,9 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
                         ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                         myMoves.add(myMove);
                         break;
-                    } else break;
+                    } else {
+                        break;
+                    }
                 }
                 newPosition = new ChessPosition(row + mod2, col + mod1);
                 while (newPosition.inBounds()) {
@@ -44,7 +46,9 @@ public class BishopMovesCalculator extends PieceMovesCalculator {
                         ChessMove myMove = new ChessMove(myPosition, newPosition, null);
                         myMoves.add(myMove);
                         break;
-                    } else break;
+                    } else {
+                        break;
+                    }
                 }
             }
         }

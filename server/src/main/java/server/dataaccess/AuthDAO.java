@@ -35,14 +35,6 @@ public class AuthDAO extends DAO {
         return db.getAuth(authToken);
     }
 
-    public HashMap<String, AuthData> getAuthTokens() {
-        return db.getAuthData();
-    }
-
-    public void deleteAuth(AuthData authData) {
-        db.removeAuth(authData);
-    }
-
     @Override
     public void clear() {
         db.setAuthTokens(new HashMap<>());
