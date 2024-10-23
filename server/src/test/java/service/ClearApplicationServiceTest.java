@@ -35,4 +35,14 @@ public class ClearApplicationServiceTest {
         Assertions.assertEquals(new ArrayList<>(), gameService.listGames());
         Assertions.assertEquals( new HashMap<>(), userDAO.getUsers());
     }
+
+    @Test
+    public void testClearAllRepeated() {
+        clearApplicationService.clearAll();
+        clearApplicationService.clearAll();
+        clearApplicationService.clearAll();
+        UserDAO userDAO = clearApplicationService.clearAll();
+        Assertions.assertEquals(new ArrayList<>(), gameService.listGames());
+        Assertions.assertEquals( new HashMap<>(), userDAO.getUsers());
+    }
 }
