@@ -30,6 +30,42 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
         }
     }
 
+    public void pawnPromotion1(int row, int col, ChessPosition myPosition,
+                              ChessPosition newPosition) {
+        ChessMove myMove;
+        if (row == 7) {
+            promotePawnMoves(myPosition, newPosition);
+        } else {
+            myMove = new ChessMove (myPosition, newPosition, null);
+            myMoves.add(myMove);
+            if (row == 2) {
+                newPosition = new ChessPosition(row + 2, col);
+                if (board.getPiece(newPosition) == null) {
+                    myMove = new ChessMove (myPosition, newPosition, null);
+                    myMoves.add(myMove);
+                }
+            }
+        }
+    }
+
+    public void pawnPromotion2(int row, int col, ChessPosition myPosition,
+                               ChessPosition newPosition) {
+        ChessMove myMove;
+        if (row == 2) {
+            promotePawnMoves(myPosition, newPosition);
+        } else {
+            myMove = new ChessMove (myPosition, newPosition, null);
+            myMoves.add(myMove);
+            if (row == 7) {
+                newPosition = new ChessPosition(row - 2, col);
+                if (board.getPiece(newPosition) == null) {
+                    myMove = new ChessMove (myPosition, newPosition, null);
+                    myMoves.add(myMove);
+                }
+            }
+        }
+    }
+
     public void createMoves() {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -39,19 +75,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
         if (myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             newPosition = new ChessPosition(row + 1, col);
             if (newPosition.inBounds() && board.getPiece(newPosition) == null) {
-                if (row == 7) {
-                    promotePawnMoves(myPosition, newPosition);
-                } else {
-                    myMove = new ChessMove (myPosition, newPosition, null);
-                    myMoves.add(myMove);
-                    if (row == 2) {
-                        newPosition = new ChessPosition(row + 2, col);
-                        if (board.getPiece(newPosition) == null) {
-                            myMove = new ChessMove (myPosition, newPosition, null);
-                            myMoves.add(myMove);
-                        }
-                    }
-                }
+                pawnPromotion1(row, col, myPosition, newPosition);
             }
             int[] i = {-1, 1};
             for (int mod : i) {
@@ -68,19 +92,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
         } else {
             newPosition = new ChessPosition(row - 1, col);
             if (newPosition.inBounds() && board.getPiece(newPosition) == null) {
-                if (row == 2) {
-                    promotePawnMoves(myPosition, newPosition);
-                } else {
-                    myMove = new ChessMove (myPosition, newPosition, null);
-                    myMoves.add(myMove);
-                    if (row == 7) {
-                        newPosition = new ChessPosition(row - 2, col);
-                        if (board.getPiece(newPosition) == null) {
-                            myMove = new ChessMove (myPosition, newPosition, null);
-                            myMoves.add(myMove);
-                        }
-                    }
-                }
+                pawnPromotion2(row, col, myPosition, newPosition);
             }
             int[] i = {-1, 1};
             for (int mod : i) {

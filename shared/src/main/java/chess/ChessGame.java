@@ -154,14 +154,21 @@ public class ChessGame {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition newPosition = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(newPosition);
-                if (piece != null && piece.getTeamColor() != color) {
-                    // If error, change piece.pieceMoves to be validMoves(newPosition)
-                    Collection<ChessMove> moves = piece.pieceMoves(board, newPosition);
-                    for (ChessMove move : moves) {
-                        if (move.getEndPosition().equals(myPosition)) {
-                            return true;
-                        }
-                    }
+                if (willHitKing(piece, color, myPosition, newPosition)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean willHitKing(ChessPiece piece, TeamColor color, ChessPosition myPosition, ChessPosition newPosition) {
+        if (piece != null && piece.getTeamColor() != color) {
+            // If error, change piece.pieceMoves to be validMoves(newPosition)
+            Collection<ChessMove> moves = piece.pieceMoves(board, newPosition);
+            for (ChessMove move : moves) {
+                if (move.getEndPosition().equals(myPosition)) {
+                    return true;
                 }
             }
         }
