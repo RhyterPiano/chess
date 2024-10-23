@@ -20,6 +20,9 @@ public class GameService {
     }
 
     public CreateGameResult createGame(CreateGameRequest request) {
+        if (request.gameName() == null) {
+            return null;
+        }
         int gameID = gameDAO.createGame(request.gameName());
         return new CreateGameResult(gameID);
     }
@@ -63,5 +66,9 @@ public class GameService {
             gameList.add(game.updateGame(null));
         }
         return gameList;
+    }
+
+    public void clear() {
+        gameDAO.clear();
     }
 }

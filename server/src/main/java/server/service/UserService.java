@@ -48,4 +48,9 @@ public class UserService {
         authDAO.removeAuth(authToken);
 
     }
+
+    public void clear() {
+        userDAO.clear();
+        authDAO.clear();
+    }
 }

@@ -9,6 +9,8 @@ import server.service.requests.RegisterRequest;
 import server.service.results.LoginResult;
 import server.service.results.RegisterResult;
 
+
+
 public class UserServiceTest {
     private UserService userService = new UserService();
     private static RegisterRequest goodRegisterRequest = new RegisterRequest("New User",
@@ -16,6 +18,10 @@ public class UserServiceTest {
     private static RegisterRequest badRegisterRequest = new RegisterRequest(null, null, null);
     private static LoginRequest goodLoginRequest = new LoginRequest("New User", "password");
 
+    @BeforeEach
+    public void setUp() {
+        userService.clear();
+    }
 
     @Test
     public void testRegisterSuccess() throws DataAccessException {
