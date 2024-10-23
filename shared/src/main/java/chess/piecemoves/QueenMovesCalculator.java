@@ -5,6 +5,9 @@ import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 public class QueenMovesCalculator extends PieceMovesCalculator {
 
     public QueenMovesCalculator(ChessBoard board, ChessPosition myPosition) {
@@ -17,74 +20,18 @@ public class QueenMovesCalculator extends PieceMovesCalculator {
         int col = myPosition.getColumn();
         ChessPosition newPosition;
         //rook moves
-        int[] i = {1, -1};
-        for (int mod : i) {
-            newPosition = new ChessPosition(row + mod, col);
-            while (newPosition.inBounds()) {
-                if (board.getPiece(newPosition) == null) {
-                    ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                    myMoves.add(myMove);
-                    newPosition = new ChessPosition(newPosition.getRow() + mod, newPosition.getColumn());
-                } else if (board.getPiece(newPosition).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
-                    ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                    myMoves.add(myMove);
-                    break;
-                } else {
-                    break;
-                }
-            }
-            newPosition = new ChessPosition(row, col + mod);
-            while (newPosition.inBounds()) {
-                if (board.getPiece(newPosition) == null) {
-                    ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                    myMoves.add(myMove);
-                    newPosition = new ChessPosition(newPosition.getRow(), newPosition.getColumn() + mod);
-                } else if (board.getPiece(newPosition).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
-                    ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                    myMoves.add(myMove);
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
+        RookMovesCalculator rook = new RookMovesCalculator(board, myPosition);
+        rook.createMoves();
+        Collection<ChessMove> rookMoves = rook.getMoves();
         //bishop moves
-        i = new int[] {-1, 1};
-        int[] j = {-1, 1};
-        for (int mod1 : i) {
-            for (int mod2 : j) {
-                newPosition = new ChessPosition(row + mod1, col + mod2);
-                while (newPosition.inBounds()) {
-                    ChessPiece other = board.getPiece(newPosition);
-                    if (other == null) {
-                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(myMove);
-                        newPosition = new ChessPosition(newPosition.getRow() + mod1, newPosition.getColumn() + mod2);
-                    } else if (other.getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
-                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(myMove);
-                        break;
-                    } else {
-                        break;
-                    }
-                }
-                newPosition = new ChessPosition(row + mod2, col + mod1);
-                while (newPosition.inBounds()) {
-                    ChessPiece other = board.getPiece(newPosition);
-                    if (other == null) {
-                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(myMove);
-                        newPosition = new ChessPosition(newPosition.getRow() + mod2, newPosition.getColumn() + mod1);
-                    } else if (other.getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
-                        ChessMove myMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(myMove);
-                        break;
-                    } else {
-                        break;
-                    }
-                }
-            }
+        BishopMovesCalculator bishop = new BishopMovesCalculator(board, myPosition);
+        bishop.createMoves();
+        Collection<ChessMove> bishopMoves = bishop.getMoves();
+        for (ChessMove move : rookMoves) {
+            myMoves.add(move);
         }
-
+        for (ChessMove move : bishopMoves) {
+            myMoves.add(move);
+        }
     }
 }

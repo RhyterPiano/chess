@@ -4,6 +4,8 @@ import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 
+import java.util.HashSet;
+
 public class KnightMovesCalculator extends PieceMovesCalculator {
 
     public KnightMovesCalculator(ChessBoard board, ChessPosition myPosition) {
@@ -11,13 +13,12 @@ public class KnightMovesCalculator extends PieceMovesCalculator {
         createMoves();
     }
 
-    public void createMoves() {
+    public void iterateMods(ChessPosition myPosition, int[] i, int[] j) {
+        myMoves = new HashSet<>();
+        ChessMove myMove;
+        ChessPosition newPosition;
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        ChessPosition newPosition;
-        ChessMove myMove;
-        int[] i = {-2, 2};
-        int[] j = {-1, 1};
         for (int mod1 : i) {
             for (int mod2 : j) {
                 newPosition = new ChessPosition(row + mod1, col + mod2);
@@ -34,5 +35,11 @@ public class KnightMovesCalculator extends PieceMovesCalculator {
                 }
             }
         }
+    }
+
+    public void createMoves() {
+        int[] i = {-2, 2};
+        int[] j = {-1, 1};
+        iterateMods(myPosition, i, j);
     }
 }

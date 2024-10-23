@@ -189,21 +189,25 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
             Collection<Collection<ChessMove>> validMoves = new HashSet<>();
-            for (int i = 1; i <= 8; i++) {
-                for (int j = 1; j <= 8; j++) {
-                    ChessPosition position = new ChessPosition(i, j);
-                    ChessPiece piece = board.getPiece(position);
-                    if (piece != null && piece.getTeamColor() == teamColor) {
-                        Collection<ChessMove> myMoves = validMoves(position);
-                        if (!myMoves.isEmpty()) {
-                            validMoves.add(myMoves);
-                        }
-                    }
-                }
-            }
+            checkCanMove(validMoves, teamColor);
             return validMoves.isEmpty();
         }
         return false;
+    }
+
+    public void checkCanMove(Collection<Collection<ChessMove>> validMoves, TeamColor teamColor) {
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    Collection<ChessMove> myMoves = validMoves(position);
+                    if (!myMoves.isEmpty()) {
+                        validMoves.add(myMoves);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -218,18 +222,7 @@ public class ChessGame {
             return false;
         }
         Collection<Collection<ChessMove>> validMoves = new HashSet<>();
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                ChessPosition position = new ChessPosition(i, j);
-                ChessPiece piece = board.getPiece(position);
-                if (piece != null && piece.getTeamColor() == teamColor) {
-                    Collection<ChessMove> myMoves = validMoves(position);
-                    if (!myMoves.isEmpty()) {
-                        validMoves.add(myMoves);
-                    }
-                }
-            }
-        }
+        checkCanMove(validMoves, teamColor);
         return validMoves.isEmpty();
     }
 

@@ -21,6 +21,15 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
         myMoves.add(myMove);
     }
 
+    private void checkValid(ChessPiece myPiece, ChessPosition newPosition) {
+        ChessMove myMove;
+        if (newPosition.inBounds() && board.getPiece(newPosition) != null &&
+                board.getPiece(newPosition).getTeamColor() != myPiece.getTeamColor()) {
+            myMove = new ChessMove(myPosition, newPosition, null);
+            myMoves.add(myMove);
+        }
+    }
+
     public void createMoves() {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -53,11 +62,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
                         promotePawnMoves(myPosition, newPosition);
                     }
                 } else {
-                    if (newPosition.inBounds() && board.getPiece(newPosition) != null &&
-                            board.getPiece(newPosition).getTeamColor() != myPiece.getTeamColor()) {
-                        myMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(myMove);
-                    }
+                    checkValid(myPiece, newPosition);
                 }
             }
         } else {
@@ -86,11 +91,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator {
                         promotePawnMoves(myPosition, newPosition);
                     }
                 } else {
-                    if (newPosition.inBounds() && board.getPiece(newPosition) != null &&
-                            board.getPiece(newPosition).getTeamColor() != myPiece.getTeamColor()) {
-                        myMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(myMove);
-                    }
+                    checkValid(myPiece, newPosition);
                 }
             }
 

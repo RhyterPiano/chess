@@ -22,4 +22,4 @@ public abstract class PieceMovesCalculator {
     public Collection<ChessMove> getMoves() {
         return myMoves;
     }
-}
+    }
