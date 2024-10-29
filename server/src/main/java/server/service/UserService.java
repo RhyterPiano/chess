@@ -14,7 +14,6 @@ public class UserService {
     private AuthDAO authDAO = new AuthDAO();
 
     public UserService() {
-        userDAO = new UserDAO();
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
