@@ -26,10 +26,9 @@ public class MySQLUserDAO extends DAO {
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS users (
-              'id' int NOT NULL AUTO_INCREMENT,
-              'username' varchar(256) NOT NULL,
-              'password' varchar(256) NOT NULL,
-              'email' varchar(256) NOT NULL,
+              `username` varchar(256) NOT NULL,
+              `password` varchar(256) NOT NULL,
+              `email` varchar(256) NOT NULL,
               INDEX(username)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
@@ -48,14 +47,24 @@ public class MySQLUserDAO extends DAO {
         }
     }
 
-    public void createUser(RegisterRequest request) throws DataAccessException {
-        userExists(request);
-        UserData user = new UserData(request.username(), request.password(), request.email());
-        addUser(user);
-    }
-
-    public UserData getUser(String username){
-        return db.getUser(username);
+    public UserData getUser(String username) throws DataAccessException {
+        UserData user = new UserData(null, null, null);
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT password, email FROM users WHERE username=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String password = rs.getString("password");
+                        String email = rs.getString("email");
+                        user = new UserData(username, password, email);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return user;
     }
 
     public HashMap<String, UserData> getUsers() {
