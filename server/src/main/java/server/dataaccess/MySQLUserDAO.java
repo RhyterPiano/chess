@@ -48,7 +48,7 @@ public class MySQLUserDAO extends DAO {
     }
 
     public UserData getUser(String username) throws DataAccessException {
-        UserData user = new UserData(null, null, null);
+        UserData user = null;
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "SELECT password, email FROM users WHERE username=?";
             try (var ps = conn.prepareStatement(statement)) {

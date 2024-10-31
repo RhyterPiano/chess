@@ -21,7 +21,7 @@ public class UserService {
         try {
             userDAO.userExists(request);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Insufficient register info");
+            throw new DataAccessException("User Already Exists");
         }
         UserData userData = new UserData(request.username(), request.password(), request.email());
         if (userData.password() == null || userData.email() == null) {

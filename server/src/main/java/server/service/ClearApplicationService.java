@@ -2,7 +2,7 @@ package server.service;
 import server.dataaccess.*;
 
 public class ClearApplicationService {
-    UserDAO userDAO = new UserDAO();
+    MySQLUserDAO userDAO = new MySQLUserDAO();
     GameDAO gameDAO = new GameDAO();
     AuthDAO authDAO = new AuthDAO();
 
@@ -10,7 +10,7 @@ public class ClearApplicationService {
 
     }
 
-    public UserDAO clearAll() {
+    public MySQLUserDAO clearAll() {
         userDAO.clear();
         gameDAO.clear();
         authDAO.clear();
