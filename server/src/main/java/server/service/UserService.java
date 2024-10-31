@@ -3,7 +3,7 @@ package server.service;
 
 import model.AuthData;
 import model.UserData;
-import server.dataaccess.AuthDAO;
+import server.dataaccess.MySQLAuthDAO;
 import server.dataaccess.DataAccessException;
 import server.service.requests.*;
 import server.dataaccess.UserDAO;
@@ -12,7 +12,7 @@ import server.service.results.*;
 
 public class UserService {
     private MySQLUserDAO userDAO = new MySQLUserDAO();
-    private AuthDAO authDAO = new AuthDAO();
+    private MySQLAuthDAO authDAO = new MySQLAuthDAO();
 
     public UserService() {
     }

@@ -4,7 +4,7 @@ import server.dataaccess.*;
 public class ClearApplicationService {
     MySQLUserDAO userDAO = new MySQLUserDAO();
     GameDAO gameDAO = new GameDAO();
-    AuthDAO authDAO = new AuthDAO();
+    MySQLAuthDAO authDAO = new MySQLAuthDAO();
 
     public ClearApplicationService() {
 

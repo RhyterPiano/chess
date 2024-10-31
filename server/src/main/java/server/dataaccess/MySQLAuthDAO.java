@@ -10,6 +10,22 @@ public class MySQLAuthDAO extends DAO {
     public MySQLAuthDAO() {
     }
 
+    @Override
+    protected String[] createStatements() {
+        final String[] createStatements = {
+                """
+                CREATE TABLE IF NOT EXISTS authentication (
+                  `authtoken` varchar(256) NOT NULL,
+                  `username` varchar(256) NOT NULL,
+                  INDEX(authtoken)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+                """
+        };
+        return createStatements;
+    }
+
+
+
     public String createAuth() {
         return UUID.randomUUID().toString();
     }
