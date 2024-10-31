@@ -82,7 +82,7 @@ public class MySQLUserDAO extends DAO {
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, request.username());
                 try (var rs = ps.executeQuery()) {
-                    if (!rs.next()) {
+                    if (rs.next()) {
                         throw new DataAccessException("User already exists");
                     }
                 }
@@ -117,6 +117,13 @@ public class MySQLUserDAO extends DAO {
 
     @Override
     public void clear() {
-        db.setUsers(new HashMap<>());
+        var statement = "TRUNCATE users";
+        try {
+            executeUpdate(statement);
+        }
+        catch (DataAccessException e) {
+            System.out.println("Error in MySQLUserDAO.clear");
+        }
+
     }
 }

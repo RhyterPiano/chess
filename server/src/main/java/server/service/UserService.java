@@ -18,7 +18,11 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
-        userDAO.userExists(request);
+        try {
+            userDAO.userExists(request);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Insufficient register info");
+        }
         UserData userData = new UserData(request.username(), request.password(), request.email());
         if (userData.password() == null || userData.email() == null) {
             throw new DataAccessException("Insufficient register info");
