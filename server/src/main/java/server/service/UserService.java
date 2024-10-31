@@ -7,10 +7,11 @@ import server.dataaccess.AuthDAO;
 import server.dataaccess.DataAccessException;
 import server.service.requests.*;
 import server.dataaccess.UserDAO;
+import server.dataaccess.MySQLUserDAO;
 import server.service.results.*;
 
 public class UserService {
-    private UserDAO userDAO = new UserDAO();
+    private MySQLUserDAO userDAO = new MySQLUserDAO();
     private AuthDAO authDAO = new AuthDAO();
 
     public UserService() {
