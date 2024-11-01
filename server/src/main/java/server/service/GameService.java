@@ -5,6 +5,7 @@ import model.GameData;
 import model.UserData;
 import server.dataaccess.DataAccessException;
 import server.dataaccess.GameDAO;
+import server.dataaccess.MySQLGameDAO;
 import server.service.requests.CreateGameRequest;
 import server.service.requests.JoinGameRequest;
 import server.service.results.CreateGameResult;
@@ -13,7 +14,7 @@ import server.service.results.ListGamesResult;
 import java.util.*;
 
 public class GameService {
-    GameDAO gameDAO = new GameDAO();
+    MySQLGameDAO gameDAO = new MySQLGameDAO();
 
     public GameService() {
 

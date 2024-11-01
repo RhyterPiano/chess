@@ -9,6 +9,28 @@ import java.util.*;
 public class MySQLGameDAO extends DAO {
     private final Random random = new Random();
     public MySQLGameDAO() {
+        try {
+            configureDatabase();
+        } catch (DataAccessException e) {
+            System.out.println("Error in creating MySQLUserDAO");
+        }
+    }
+
+    @Override
+    protected String[] createStatements() {
+        final String[] createStatements = {
+                """
+                CREATE TABLE IF NOT EXISTS games (
+                  `gameid` int NOT NULL,
+                  `whiteusername` varchar(256),
+                  `blackusername` varchar(256),
+                  `gamename` varchar(256),
+                  `chessgame` json,
+                  INDEX(gameid)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+                """
+        };
+        return createStatements;
     }
 
     public int createGame(String gameName) {

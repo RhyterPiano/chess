@@ -1,12 +1,13 @@
 package server.service;
 
 
+import com.mysql.cj.log.Log;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import server.dataaccess.MySQLAuthDAO;
 import server.dataaccess.DataAccessException;
 import server.service.requests.*;
-import server.dataaccess.UserDAO;
 import server.dataaccess.MySQLUserDAO;
 import server.service.results.*;
 
@@ -23,8 +24,8 @@ public class UserService {
         } catch (DataAccessException e) {
             throw new DataAccessException("User Already Exists");
         }
-        UserData userData = new UserData(request.username(), request.password(), request.email());
-        if (userData.password() == null || userData.email() == null) {
+        UserData userData = new UserData(request.username(), hashPassword(request.password()), request.email());
+        if (request.password() == null || userData.email() == null) {
             throw new DataAccessException("Insufficient register info");
         }
         String authToken = authDAO.createAuth();
@@ -39,7 +40,7 @@ public class UserService {
         if (userData == null) {
             throw new DataAccessException("Error: User does not exist");
         }
-        if (!userData.password().equals(request.password())) {
+        if (!BCrypt.checkpw(request.password(), userData.password())) {
             throw new DataAccessException("Error: Incorrect password");
         }
         String authToken = authDAO.createAuth();
@@ -53,6 +54,10 @@ public class UserService {
             throw new DataAccessException("The authToken does not exist");
         }
         authDAO.removeAuth(authToken);
+    }
+
+    private String hashPassword(String clearTextPassword) {
+        return BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
     }
 
     public void clear() {
