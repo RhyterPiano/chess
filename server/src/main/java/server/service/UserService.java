@@ -49,6 +49,9 @@ public class UserService {
     }
 
     public void logout(String authToken) throws DataAccessException{
+        if (authDAO.getAuth(authToken) == null) {
+            throw new DataAccessException("The authToken does not exist");
+        }
         authDAO.removeAuth(authToken);
     }
 
