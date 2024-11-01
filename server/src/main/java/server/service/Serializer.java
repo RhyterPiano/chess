@@ -1,5 +1,6 @@
 package server.service;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import server.handlers.CreateGameHandler;
@@ -27,6 +28,10 @@ public class Serializer {
         return new Gson().fromJson(request.body(), JoinGameRequest.class);
     }
 
+    public ChessGame deserializeChessGame(String json) {
+        return new Gson().fromJson(json, ChessGame.class);
+    }
+
     public String serializeError(ErrorResult error) {
         return new Gson().toJson(error);
     }
@@ -42,6 +47,10 @@ public class Serializer {
     public String serializeListGames(ListGamesResult listGamesResult) {
         String result = new Gson().toJson(listGamesResult);
         return result;
+    }
+
+    public String serializeChessGame(ChessGame game) {
+        return new Gson().toJson(game);
     }
 
     public String serializeEmpty() {
