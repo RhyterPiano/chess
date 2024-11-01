@@ -6,7 +6,6 @@ public class ClearApplicationHandler extends Handlers {
     ClearApplicationService clearApplicationService = new ClearApplicationService();
 
     public ClearApplicationHandler() {
-
     }
 
     public void clearAll() {

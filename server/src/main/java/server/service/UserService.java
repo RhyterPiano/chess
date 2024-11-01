@@ -50,7 +50,6 @@ public class UserService {
 
     public void logout(String authToken) throws DataAccessException{
         authDAO.removeAuth(authToken);
-
     }
 
     public void clear() {
