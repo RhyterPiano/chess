@@ -1,4 +1,4 @@
 package server.dataaccess;
 
-public class GameDAOTest {
+public class MySQLGameDAOTest {
 }

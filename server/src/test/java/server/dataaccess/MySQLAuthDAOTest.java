@@ -1,13 +1,9 @@
 package server.dataaccess;
 
 import model.AuthData;
-import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
-import server.service.requests.RegisterRequest;
-import server.dataaccess.*;
 
-public class AuthDAOTest {
+public class MySQLAuthDAOTest {
     private AuthDAO authDAO;
     private AuthDAO expected;
     private DB db = new DB();
