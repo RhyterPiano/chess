@@ -1,9 +1,9 @@
-package server.dataaccess;
+package dataaccess;
 
 import model.AuthData;
 import org.junit.jupiter.api.*;
-
-import javax.xml.crypto.Data;
+import server.dataaccess.DataAccessException;
+import server.dataaccess.MySQLAuthDAO;
 
 public class MySQLAuthDAOTest {
     private MySQLAuthDAO authDAO = new MySQLAuthDAO();

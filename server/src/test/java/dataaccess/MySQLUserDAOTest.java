@@ -1,7 +1,10 @@
-package server.dataaccess;
+package dataaccess;
 
 import model.UserData;
 import org.junit.jupiter.api.*;
+import server.dataaccess.DataAccessException;
+import server.dataaccess.MySQLUserDAO;
+import server.dataaccess.UserDAO;
 import server.service.requests.RegisterRequest;
 
 public class MySQLUserDAOTest {

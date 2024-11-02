@@ -1,4 +1,4 @@
-package server.dataaccess;
+package dataaccess;
 
 public class MySQLGameDAOTest {
 }

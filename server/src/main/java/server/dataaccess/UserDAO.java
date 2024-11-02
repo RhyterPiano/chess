@@ -14,12 +14,6 @@ public class UserDAO extends DAO {
     public UserDAO() {
     }
 
-    public void createUser(RegisterRequest request) throws DataAccessException {
-        userExists(request);
-        UserData user = new UserData(request.username(), request.password(), request.email());
-        addUser(user);
-    }
-
     public UserData getUser(String username){
         return db.getUser(username);
     }
