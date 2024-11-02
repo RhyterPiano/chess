@@ -3,28 +3,59 @@ package server.dataaccess;
 import model.AuthData;
 import org.junit.jupiter.api.*;
 
+import javax.xml.crypto.Data;
+
 public class MySQLAuthDAOTest {
-    private AuthDAO authDAO;
-    private AuthDAO expected;
-    private DB db = new DB();
+    private MySQLAuthDAO authDAO = new MySQLAuthDAO();
+    String token;
+    AuthData authData;
 
     @BeforeEach
     public void setUp() {
-        authDAO = new AuthDAO();
-        expected = new AuthDAO();
+        token = authDAO.createAuth();
+        authData = new AuthData(token, "username");
     }
 
     @Test
-    public void testClear() {
+    public void testClear() throws DataAccessException {
         String token = authDAO.createAuth();
         AuthData authData = new AuthData(token, "username");
         authDAO.addAuthData(authData);
         authDAO.clear();
 
-        Assertions.assertEquals(db.getAuthData(), authDAO.getAuthData());
+        Assertions.assertEquals(null, authDAO.getAuth(token));
     }
 
-//    @Test
-//    public void
+    @Test
+    public void testAddAuthDataSuccess() throws DataAccessException {
+        authDAO.addAuthData(authData);
+        Assertions.assertEquals(authData, authDAO.getAuth(token));
+    }
+
+    @Test
+    public void testAddAuthDataFail() throws DataAccessException {
+        authDAO.addAuthData(authData);
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            AuthData authData = new AuthData(null, null);
+            authDAO.addAuthData(authData);
+        });
+    }
+
+    @Test
+    public void testRemoveAuthSuccess() throws DataAccessException {
+        authDAO.addAuthData(authData);
+        authDAO.removeAuth(token);
+        Assertions.assertNull(authDAO.getAuth(token));
+    }
+
+    @Test
+    public void testRemoveAuthFail() throws DataAccessException {
+        authDAO.addAuthData(authData);
+        authDAO.removeAuth(token);
+        Assertions.assertDoesNotThrow(() -> {
+            authDAO.removeAuth(token);
+        });
+    }
+
 
 }
