@@ -1,6 +1,9 @@
 package dataaccess;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
+import chess.InvalidMoveException;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;
@@ -51,6 +54,30 @@ public class MySQLGameDAOTest {
     public void testListGamesEmpty() {
         Assertions.assertEquals(new LinkedHashMap<>(), gameDAO.listGames());
     }
+
+    @Test
+    public void testUpdateGame() throws DataAccessException, InvalidMoveException {
+        gameDAO.addGame(gameData);
+        chessGame.makeMove(new ChessMove(new ChessPosition(2, 1),
+                new ChessPosition(3, 1), null));
+        GameData gameData1 = new GameData(gameData.gameID(), null,
+                "hi", "hello", chessGame);
+        gameDAO.updateGame(gameData.gameID(), gameData1);
+        Assertions.assertEquals(gameData1, gameDAO.getGame(gameData.gameID()));
+    }
+
+    @Test
+    public void testUpdateGame2() throws DataAccessException, InvalidMoveException {
+        gameDAO.addGame(gameData);
+        chessGame.makeMove(new ChessMove(new ChessPosition(2, 1),
+                new ChessPosition(3, 1), null));
+        GameData gameData1 = new GameData(gameData.gameID(), "hello",
+                "hi", "hello", chessGame);
+        gameDAO.updateGame(gameData.gameID(), gameData1);
+        Assertions.assertEquals(gameData1, gameDAO.getGame(gameData.gameID()));
+    }
+
+
 
 
 
