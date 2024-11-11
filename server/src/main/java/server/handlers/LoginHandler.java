@@ -1,11 +1,13 @@
 package server.handlers;
 
+import requests.LoginRequest;
+import requests.RegisterRequest;
+import results.ErrorResult;
+import results.LoginResult;
+import results.RegisterResult;
 import server.dataaccess.DataAccessException;
-import server.service.requests.*;
-import server.service.results.*;
 import spark.Request;
 import spark.Response;
-import server.service.*;
 
 public class LoginHandler extends Handlers {
 

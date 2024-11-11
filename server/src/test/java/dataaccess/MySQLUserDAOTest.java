@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 import server.dataaccess.DataAccessException;
 import server.dataaccess.MySQLUserDAO;
 import server.dataaccess.UserDAO;
-import server.service.requests.RegisterRequest;
+import requests.RegisterRequest;
 
 public class MySQLUserDAOTest {
     private MySQLUserDAO userDAO = new MySQLUserDAO();

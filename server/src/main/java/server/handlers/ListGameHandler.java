@@ -2,8 +2,8 @@ package server.handlers;
 
 import model.GameData;
 import server.service.GameService;
-import server.service.results.ErrorResult;
-import server.service.results.ListGamesResult;
+import results.ErrorResult;
+import results.ListGamesResult;
 import spark.Request;
 import spark.Response;
 

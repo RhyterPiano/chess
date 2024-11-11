@@ -1,15 +1,16 @@
 package server.service;
 
 
-import com.mysql.cj.log.Log;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
+import requests.LoginRequest;
+import requests.RegisterRequest;
+import results.LoginResult;
+import results.RegisterResult;
 import server.dataaccess.MySQLAuthDAO;
 import server.dataaccess.DataAccessException;
-import server.service.requests.*;
 import server.dataaccess.MySQLUserDAO;
-import server.service.results.*;
 
 public class UserService {
     private MySQLUserDAO userDAO = new MySQLUserDAO();

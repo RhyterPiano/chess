@@ -1,13 +1,12 @@
 package service;
 
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
 import server.dataaccess.DataAccessException;
 import server.service.UserService;
-import server.service.requests.LoginRequest;
-import server.service.requests.RegisterRequest;
-import server.service.results.LoginResult;
-import server.service.results.RegisterResult;
+import requests.LoginRequest;
+import requests.RegisterRequest;
+import results.LoginResult;
+import results.RegisterResult;
 
 
 

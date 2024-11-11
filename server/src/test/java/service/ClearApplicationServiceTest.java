@@ -1,18 +1,15 @@
 package service;
 
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
 import server.dataaccess.DataAccessException;
 import server.dataaccess.MySQLUserDAO;
-import server.dataaccess.UserDAO;
 import server.service.ClearApplicationService;
 import server.service.GameService;
 import server.service.UserService;
-import server.service.requests.CreateGameRequest;
-import server.service.requests.RegisterRequest;
+import requests.CreateGameRequest;
+import requests.RegisterRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ClearApplicationServiceTest {
     private ClearApplicationService clearApplicationService = new ClearApplicationService();

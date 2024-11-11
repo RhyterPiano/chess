@@ -1,17 +1,8 @@
 package server.dataaccess;
 
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
-import server.service.requests.RegisterRequest;
+import requests.RegisterRequest;
 import dataaccess.DatabaseManager;
-
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
 
 public class MySQLUserDAO extends DAO {
 

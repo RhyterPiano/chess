@@ -4,7 +4,7 @@ package server.handlers;
 import server.dataaccess.MySQLAuthDAO;
 import server.service.Serializer;
 import server.service.UserService;
-import server.service.results.ErrorResult;
+import results.ErrorResult;
 
 public abstract class Handlers {
     protected static MySQLAuthDAO authDAO = new MySQLAuthDAO();

@@ -2,10 +2,14 @@ package server.service;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import server.handlers.CreateGameHandler;
-import server.service.requests.*;
-import server.service.results.*;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import requests.LoginRequest;
+import requests.RegisterRequest;
+import results.CreateGameResult;
+import results.ErrorResult;
+import results.ListGamesResult;
+import results.LoginResult;
 import spark.Request;
 
 import java.util.HashMap;

@@ -2,14 +2,11 @@ package server.service;
 
 import chess.ChessGame;
 import model.GameData;
-import model.UserData;
 import server.dataaccess.DataAccessException;
-import server.dataaccess.GameDAO;
 import server.dataaccess.MySQLGameDAO;
-import server.service.requests.CreateGameRequest;
-import server.service.requests.JoinGameRequest;
-import server.service.results.CreateGameResult;
-import server.service.results.ListGamesResult;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import results.CreateGameResult;
 
 import java.util.*;
 

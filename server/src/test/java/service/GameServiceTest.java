@@ -1,17 +1,14 @@
 package service;
 
 import chess.ChessGame;
-import org.eclipse.jetty.server.AsyncRequestLogWriter;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
 import server.dataaccess.DataAccessException;
 import server.service.GameService;
-import server.service.requests.CreateGameRequest;
-import server.service.requests.JoinGameRequest;
-import server.service.results.CreateGameResult;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import results.CreateGameResult;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class GameServiceTest {
     private GameService gameService = new GameService();

@@ -1,14 +1,9 @@
 package server;
 
 import com.google.gson.Gson;
-import model.UserData;
-import server.dataaccess.DataAccessException;
 import server.handlers.*;
 import server.service.Serializer;
-import server.service.results.ErrorResult;
-import server.service.results.LoginResult;
 import spark.*;
-import server.dataaccess.DB;
 
 import java.util.HashMap;
 

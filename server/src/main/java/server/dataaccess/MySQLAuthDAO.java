@@ -2,8 +2,6 @@ package server.dataaccess;
 
 import dataaccess.DatabaseManager;
 import model.AuthData;
-import model.UserData;
-import server.service.requests.LogoutRequest;
 
 import java.util.*;
 

@@ -1,9 +1,9 @@
 package server.handlers;
 
 import server.service.GameService;
-import server.service.requests.CreateGameRequest;
-import server.service.results.CreateGameResult;
-import server.service.results.ErrorResult;
+import requests.CreateGameRequest;
+import results.CreateGameResult;
+import results.ErrorResult;
 import spark.Request;
 import spark.Response;
 

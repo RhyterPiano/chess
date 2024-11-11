@@ -1,11 +1,9 @@
 package server.handlers;
 
-import chess.ChessGame;
-import model.GameData;
 import server.dataaccess.DataAccessException;
 import server.service.GameService;
-import server.service.requests.JoinGameRequest;
-import server.service.results.ErrorResult;
+import requests.JoinGameRequest;
+import results.ErrorResult;
 import spark.Request;
 import spark.Response;
 

@@ -1,13 +1,9 @@
 package server.dataaccess;
 
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
-import server.service.requests.RegisterRequest;
+import requests.RegisterRequest;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
 
 public class UserDAO extends DAO {
 

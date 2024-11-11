@@ -1,9 +1,7 @@
 package server.handlers;
 
 import server.dataaccess.DataAccessException;
-import server.service.Serializer;
-import server.service.requests.LogoutRequest;
-import server.service.results.ErrorResult;
+import results.ErrorResult;
 import spark.Request;
 import spark.Response;
 

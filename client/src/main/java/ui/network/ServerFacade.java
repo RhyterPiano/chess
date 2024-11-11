@@ -9,14 +9,26 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.rmi.RemoteException;
-
 public class ServerFacade {
     public final String serverURL;
 
     public ServerFacade(String url) {
         serverURL = url;
     }
+
+    public void logOut() throws Exception {
+        var path = "/session";
+        makeRequest("DELETE", path, null, null);
+    }
+
+    public void createGame() throws Exception {
+        var path = "/game";
+        makeRequest("POST", path, null, null);
+    }
+
+
+
+
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws Exception {
         try {

@@ -1,7 +1,6 @@
 package server.dataaccess;
 
 import model.AuthData;
-import server.service.requests.LogoutRequest;
 
 import java.util.*;
 
