@@ -1,6 +1,9 @@
 package ui.network;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import requests.*;
+import results.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,15 +19,38 @@ public class ServerFacade {
         serverURL = url;
     }
 
+    public void register(RegisterRequest request) throws Exception {
+        var path = "/user";
+        makeRequest("POST", path, request, RegisterResult.class);
+    }
+
+    public void login(LoginRequest request) throws Exception {
+        var path = "/session";
+        makeRequest("POST", path, request, LoginResult.class);
+    }
+
     public void logOut() throws Exception {
         var path = "/session";
         makeRequest("DELETE", path, null, null);
     }
 
-    public void createGame() throws Exception {
+    public void createGame(CreateGameRequest request) throws Exception {
         var path = "/game";
-        makeRequest("POST", path, null, null);
+        makeRequest("POST", path, request, null);
     }
+
+    public ListGamesResult listGames() throws Exception {
+        var path = "/game";
+        return makeRequest("GET", path, null, ListGamesResult.class);
+    }
+
+    public void joinGame(JoinGameRequest request) throws Exception {
+        var path = "/game";
+        makeRequest("PUT", path, request, null);
+    }
+
+
+
 
 
 
