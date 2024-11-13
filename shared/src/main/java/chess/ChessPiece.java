@@ -5,6 +5,8 @@ import chess.piecemoves.*;
 import java.util.Collection;
 import java.util.Objects;
 
+import static chess.EscapeSequences.*;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -75,24 +77,24 @@ public class ChessPiece {
         String myString = null;
         if (myColor == ChessGame.TeamColor.WHITE) {
             switch(myType) {
-                case ROOK -> myString = "r";
-                case KING -> myString = "k";
-                case QUEEN -> myString = "q";
-                case BISHOP -> myString = "b";
-                case PAWN -> myString = "p";
-                case KNIGHT -> myString = "n";
+                case ROOK -> myString = WHITE_ROOK;
+                case KING -> myString = WHITE_KING;
+                case QUEEN -> myString = WHITE_QUEEN;
+                case BISHOP -> myString = WHITE_BISHOP;
+                case PAWN -> myString = WHITE_PAWN;
+                case KNIGHT -> myString = WHITE_KNIGHT;
             }
         } else if (myColor == ChessGame.TeamColor.BLACK){
             switch(myType) {
-                case ROOK -> myString = "R";
-                case KING -> myString = "K";
-                case QUEEN -> myString = "Q";
-                case BISHOP -> myString = "B";
-                case PAWN -> myString = "P";
-                case KNIGHT -> myString = "N";
+                case ROOK -> myString = BLACK_ROOK;
+                case KING -> myString = BLACK_KING;
+                case QUEEN -> myString = BLACK_QUEEN;
+                case BISHOP -> myString = BLACK_BISHOP;
+                case PAWN -> myString = BLACK_PAWN;
+                case KNIGHT -> myString = BLACK_KNIGHT;
             }
         } else {
-            myString = " ";
+            myString = EMPTY;
         }
         return myString;
     }

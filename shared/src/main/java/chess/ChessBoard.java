@@ -42,6 +42,10 @@ public class ChessBoard {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    public ChessPiece[] getRow(int i) {
+        return board[i-1];
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
