@@ -14,7 +14,7 @@ import static chess.ChessGame.TeamColor.*;
 
 
 public class ServerFacadeTests {
-    private ServerFacade serverFacade = new ServerFacade("http://localhost:0");
+    private static ServerFacade serverFacade;
     private static Server server;
     private RegisterRequest registerRequest = new RegisterRequest("bob", "bob", "bob");
     private LoginRequest loginBob = new LoginRequest("bob", "bob");
@@ -26,6 +26,8 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
+        String url = String.format("http://localhost:%s", port);
+        serverFacade = new ServerFacade(url);
     }
 
     @BeforeEach
