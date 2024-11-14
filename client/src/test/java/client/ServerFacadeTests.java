@@ -7,12 +7,14 @@ import server.Server;
 import ui.network.ServerFacade;
 
 
+
 public class ServerFacadeTests {
     private ServerFacade serverFacade = new ServerFacade("http://localhost:8080");
     private static Server server;
     private RegisterRequest registerRequest = new RegisterRequest("bob", "bob", "bob");
     private LoginRequest loginBob = new LoginRequest("bob", "bob");
     private CreateGameRequest createGameRequest = new CreateGameRequest("game1");
+
 
     @BeforeAll
     public static void init() {

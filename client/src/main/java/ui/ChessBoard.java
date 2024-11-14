@@ -25,7 +25,7 @@ public class ChessBoard {
         board.printBoard(BLACK, game);
     }
 
-    private void printBoard(ChessGame.TeamColor color, chess.ChessBoard board) {
+    void printBoard(ChessGame.TeamColor color, chess.ChessBoard board) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         out.print(ERASE_SCREEN);

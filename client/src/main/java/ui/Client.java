@@ -14,6 +14,7 @@ public class Client {
     ServerFacade serverFacade;
     private boolean loggedIn;
     private HashMap<Integer, GameData> listOfGames;
+    ChessBoard chessBoardPrinter = new ChessBoard();
 
     public Client() {
         serverFacade = new ServerFacade("http://localhost:8080");
@@ -74,6 +75,7 @@ public class Client {
         try {
             JoinGameRequest request = new JoinGameRequest(color, gameID);
             serverFacade.joinGame(request);
+            chessBoardPrinter.printBoard(color, new chess.ChessGame().getBoard());
             return String.format("Congradulations! You are now in game %d playing as the %s color", gameNumber, color);
         } catch (Exception e) {
             return e.getMessage();
