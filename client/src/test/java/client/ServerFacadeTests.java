@@ -12,6 +12,7 @@ public class ServerFacadeTests {
     private static Server server;
     private RegisterRequest registerRequest = new RegisterRequest("bob", "bob", "bob");
     private LoginRequest loginBob = new LoginRequest("bob", "bob");
+    private CreateGameRequest createGameRequest = new CreateGameRequest("game1");
 
     @BeforeAll
     public static void init() {
@@ -77,6 +78,27 @@ public class ServerFacadeTests {
     @Test
     public void testLoginNoRegister() throws Exception {
         Assertions.assertThrows(Exception.class, () -> serverFacade.login(loginBob));
+    }
+
+    @Test
+    public void testCreateGame() throws Exception {
+        serverFacade.register(registerRequest);
+        CreateGameResult result = serverFacade.createGame(createGameRequest);
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void testCreateTwoGames() throws Exception {
+        serverFacade.register(registerRequest);
+        serverFacade.createGame(createGameRequest);
+        Assertions.assertDoesNotThrow(() -> serverFacade.createGame(createGameRequest));
+    }
+
+    @Test
+    public void testListOneGame() throws Exception {
+        serverFacade.register(registerRequest);
+        serverFacade.createGame(createGameRequest);
+        Assertions.assertNotNull(serverFacade.listGames());
     }
 
 }

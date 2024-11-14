@@ -39,9 +39,9 @@ public class ServerFacade {
         authToken = null;
     }
 
-    public void createGame(CreateGameRequest request) throws Exception {
+    public CreateGameResult createGame(CreateGameRequest request) throws Exception {
         var path = "/game";
-        makeRequest("POST", path, request, null, true);
+        return makeRequest("POST", path, request, CreateGameResult.class, true);
     }
 
     public ListGamesResult listGames() throws Exception {
