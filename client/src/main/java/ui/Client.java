@@ -55,6 +55,69 @@ public class Client {
         }
     }
 
+    public String help() {
+        if(loggedIn) {
+            return """
+                    -help
+                    -logout
+                    -create <game>
+                    -list
+                    -play <id> [WHITE|BLACK]
+                    -observe <id>
+                    """;
+        }
+        return """
+                -help
+                -quit
+                -login <username> <password>
+                -register <username> <password> <email>
+                """;
+    }
+
+    public String login(String... params) {
+       try {
+           LoginRequest request = new LoginRequest(params[0], params[1]);
+           serverFacade.login(request);
+           loggedIn = true;
+           return String.format("Logged in as %s.\n%s\n", request.username(), help());
+       } catch (Exception e) {
+           String errorMessage = "";
+           if(e.getMessage().contains("Index")) {
+               errorMessage = String.format("Login command didn't recieve sufficient data");
+           } else if (e.getMessage().contains("User")) {
+               errorMessage = "User and password do not match";
+           }
+           return String.format("Failed to log in. %s\n", errorMessage);
+       }
+    }
+
+    public String register(String... params) {
+        try {
+            RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
+            serverFacade.register(request);
+            loggedIn = true;
+            return String.format("Registered user %s, you are now logged in!", request.username());
+        } catch (Exception e) {
+            String errorMessage = "";
+            if(e.getMessage().contains("Taken")) {
+                errorMessage = "Username already taken";
+            } else if (e.getMessage().contains("Index")) {
+                errorMessage = "Insufficient data given to register command";
+            }
+            return String.format("Falled to register. %s\n", errorMessage);
+        }
+    }
+
+    private String logout() {
+        try {
+            serverFacade.logout();
+            loggedIn = false;
+            return String.format("Successfully logged out!\n%s", help());
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     private String observeGame(String... params) {
         return "not implemented";
     }
@@ -103,76 +166,17 @@ public class Client {
         try {
             CreateGameRequest request = new CreateGameRequest(params[0]);
             serverFacade.createGame(request);
-            return String.format("Successfully created game '%s.'", request.gameName());
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    private String logout() {
-        try {
-            serverFacade.logout();
-            loggedIn = false;
-            return "Successfully logged out!\n";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    public String help() {
-        if(loggedIn) {
-            return """
-                    -help
-                    -logout
-                    -create <game>
-                    -list
-                    -play <id> [WHITE|BLACK]
-                    -observe <id>
-                    """;
-        }
-        return """
-                -help
-                -quit
-                -login <username> <password>
-                -register <username> <password> <email>
-                """;
-    }
-
-    public String login(String... params) {
-       try {
-           LoginRequest request = new LoginRequest(params[0], params[1]);
-           serverFacade.login(request);
-           loggedIn = true;
-           return String.format("Logged in as %s.\n %s\n", request.username(), help());
-       } catch (Exception e) {
-           String errorMessage = "";
-           if(e.getMessage().contains("Index")) {
-               errorMessage = String.format("Login command didn't recieve sufficient data");
-           } else if (e.getMessage().contains("User")) {
-               errorMessage = "User and password do not match";
-           }
-           return String.format("Failed to log in. %s\n", errorMessage);
-       }
-    }
-
-    public String register(String... params) {
-        try {
-            RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
-            serverFacade.register(request);
-            loggedIn = true;
-            return String.format("Registered user %s, you are now logged in!", request.username());
+            return String.format("Successfully created game '%s.'\n", request.gameName());
         } catch (Exception e) {
             String errorMessage = "";
-            if(e.getMessage().contains("Taken")) {
-                errorMessage = "Username already taken";
-            } else if (e.getMessage().contains("Index")) {
-                errorMessage = "Insufficient data given to register command";
+            if(e.getMessage().contains("Index")) {
+                errorMessage = "no game name provided\n";
+            } else {
+                errorMessage = "please try again\n";
             }
-            return String.format("Falled to register. %s\n", errorMessage);
+            return errorMessage;
         }
     }
-
-
 
 
 }
