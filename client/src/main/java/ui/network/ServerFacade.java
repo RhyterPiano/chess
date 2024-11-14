@@ -25,17 +25,18 @@ public class ServerFacade {
         var path = "/user";
         RegisterResult result = makeRequest("POST", path, request, RegisterResult.class, false);
         authToken = result.authToken();
-        System.out.println(authToken);
     }
 
     public void login(LoginRequest request) throws Exception {
         var path = "/session";
-        makeRequest("POST", path, request, LoginResult.class, false);
+        LoginResult result = makeRequest("POST", path, request, LoginResult.class, false);
+        authToken = result.authToken();
     }
 
     public void logout() throws Exception {
         var path = "/session";
         makeRequest("DELETE", path, null, null, true);
+        authToken = null;
     }
 
     public void createGame(CreateGameRequest request) throws Exception {

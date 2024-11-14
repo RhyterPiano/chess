@@ -11,6 +11,7 @@ public class ServerFacadeTests {
     private ServerFacade serverFacade = new ServerFacade("http://localhost:8080");
     private static Server server;
     private RegisterRequest registerRequest = new RegisterRequest("bob", "bob", "bob");
+    private LoginRequest loginBob = new LoginRequest("bob", "bob");
 
     @BeforeAll
     public static void init() {
@@ -57,6 +58,25 @@ public class ServerFacadeTests {
     public void testLogout() throws Exception {
         serverFacade.register(registerRequest);
         serverFacade.logout();
+        Assertions.assertDoesNotThrow(() -> serverFacade.login(loginBob));
+    }
+
+    @Test
+    public void testLogoutNotLoggedIn() throws Exception {
+        Assertions.assertThrows(Exception.class , () -> serverFacade.logout());
+    }
+
+    @Test
+    public void testLogin() throws Exception {
+        serverFacade.register(registerRequest);
+        serverFacade.logout();
+        serverFacade.login(loginBob);
+        Assertions.assertDoesNotThrow(() -> serverFacade.logout());
+    }
+
+    @Test
+    public void testLoginNoRegister() throws Exception {
+        Assertions.assertThrows(Exception.class, () -> serverFacade.login(loginBob));
     }
 
 }
