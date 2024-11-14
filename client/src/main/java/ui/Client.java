@@ -38,7 +38,7 @@ public class Client {
                     case "list" -> listGames();
                     case "play" -> playGame(params);
                     case "observe" -> observeGame(params);
-                    default -> help();
+                    default -> String.format("Unrecognized command. Here are your options:\n%s", help());
                 };
             } else {
                 return switch (cmd) {
@@ -46,7 +46,7 @@ public class Client {
                     case "quit" -> "quit";
                     case "login" -> login(params);
                     case "register" -> register(params);
-                    default -> help();
+                    default -> String.format("Unrecognized command. Here are your options:\n%s", help());
                 };
             }
 
@@ -113,7 +113,7 @@ public class Client {
         try {
             serverFacade.logout();
             loggedIn = false;
-            return "Successfully logged out!";
+            return "Successfully logged out!\n";
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -143,9 +143,15 @@ public class Client {
            LoginRequest request = new LoginRequest(params[0], params[1]);
            serverFacade.login(request);
            loggedIn = true;
-           return String.format("Logged in as %s.", request.username());
+           return String.format("Logged in as %s.\n %s\n", request.username(), help());
        } catch (Exception e) {
-           return String.format("Failed to log in. %s\n", e.getMessage());
+           String errorMessage = "";
+           if(e.getMessage().contains("Index")) {
+               errorMessage = String.format("Login command didn't recieve sufficient data");
+           } else if (e.getMessage().contains("User")) {
+               errorMessage = "User and password do not match";
+           }
+           return String.format("Failed to log in. %s\n", errorMessage);
        }
     }
 
@@ -156,7 +162,13 @@ public class Client {
             loggedIn = true;
             return String.format("Registered user %s, you are now logged in!", request.username());
         } catch (Exception e) {
-            return String.format("Falled to register. %s", e.getMessage());
+            String errorMessage = "";
+            if(e.getMessage().contains("Taken")) {
+                errorMessage = "Username already taken";
+            } else if (e.getMessage().contains("Index")) {
+                errorMessage = "Insufficient data given to register command";
+            }
+            return String.format("Falled to register. %s\n", errorMessage);
         }
     }
 
