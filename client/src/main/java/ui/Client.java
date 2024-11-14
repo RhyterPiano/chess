@@ -1,6 +1,8 @@
 package ui;
 
+import model.GameData;
 import requests.*;
+import results.*;
 import ui.network.ServerFacade;
 
 import java.util.Arrays;
@@ -27,12 +29,12 @@ public class Client {
                 return switch (cmd) {
                     case "help" -> help();
                     case "logout" -> logout();
-                    case "create" -> creatGame();
+                    case "create" -> createGame(params);
                     case "list" -> listGames();
                     case "play" -> playGame();
                     case "observe" -> observeGame();
                     default -> help();
-                }
+                };
             } else {
                 return switch (cmd) {
                     case "help" -> help();
@@ -49,15 +51,36 @@ public class Client {
     }
 
     private String observeGame() {
+        return "not implemented";
     }
 
     private String playGame() {
+        return "not implemented";
     }
 
     private String listGames() {
+        try {
+            ListGamesResult result = serverFacade.listGames();
+            StringBuilder stringBuilder = new StringBuilder();
+            int i = 1;
+            for (GameData gameData : result.games()) {
+                stringBuilder.append("1" + gameData.gameName() + '\n');
+                i++;
+            }
+            return stringBuilder.toString();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
-    private String creatGame() {
+    private String createGame(String... params) {
+        try {
+            CreateGameRequest request = new CreateGameRequest(params[0]);
+            serverFacade.createGame(request);
+            return "success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     private String logout() {
@@ -75,10 +98,11 @@ public class Client {
             return """
                     -help
                     -logout
-                    -create
+                    -create <game>
                     -list
                     -play
-                    -observe
+                    -observe <id>
+                    -join <id> [WHITE|BLACK]
                     """;
         }
         return """

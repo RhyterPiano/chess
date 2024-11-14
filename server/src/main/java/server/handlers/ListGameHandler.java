@@ -13,6 +13,7 @@ public class ListGameHandler extends Handlers {
     GameService gameService = new GameService();
 
     public String listGames(Request req, Response res) {
+        System.out.println("ASDFASDFASDFASDFASDFASF\n\n\n\n\n\nASDFASDFASDFASDFASF\n\n\n\n\n");
         String authToken = req.headers("Authorization");
         if (checkAuth(authToken) != null) {
             res.status(401);

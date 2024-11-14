@@ -26,6 +26,7 @@ public class Repl {
             try {
                 result = client.eval(line);
                 System.out.print(result);
+                System.out.println();
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
