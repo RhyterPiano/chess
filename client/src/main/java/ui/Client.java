@@ -1,15 +1,19 @@
 package ui;
 
+import chess.ChessGame;
 import model.GameData;
 import requests.*;
 import results.*;
 import ui.network.ServerFacade;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Client {
     ServerFacade serverFacade;
     private boolean loggedIn;
+    private HashMap<Integer, GameData> listOfGames;
 
     public Client() {
         serverFacade = new ServerFacade("http://localhost:8080");
@@ -31,8 +35,8 @@ public class Client {
                     case "logout" -> logout();
                     case "create" -> createGame(params);
                     case "list" -> listGames();
-                    case "play" -> playGame();
-                    case "observe" -> observeGame();
+                    case "play" -> playGame(params);
+                    case "observe" -> observeGame(params);
                     default -> help();
                 };
             } else {
@@ -50,21 +54,41 @@ public class Client {
         }
     }
 
-    private String observeGame() {
+    private String observeGame(String... params) {
         return "not implemented";
     }
 
-    private String playGame() {
-        return "not implemented";
+    private String playGame(String... params) {
+        int gameNumber = Integer.parseInt(params[0]);
+        int gameID = listOfGames.get(gameNumber).gameID();
+        String teamColor = params[1];
+        ChessGame.TeamColor color;
+        switch(teamColor) {
+            case "white" -> color = ChessGame.TeamColor.WHITE;
+            case "black" -> color = ChessGame.TeamColor.BLACK;
+            default -> {
+                return "Invalid color, please try again\n";
+            }
+
+        }
+        try {
+            JoinGameRequest request = new JoinGameRequest(color, gameID);
+            serverFacade.joinGame(request);
+            return String.format("Congradulations! You are now in game %d playing as the %s color", gameNumber, color);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     private String listGames() {
         try {
+            listOfGames = new HashMap<>();
             ListGamesResult result = serverFacade.listGames();
             StringBuilder stringBuilder = new StringBuilder();
             int i = 1;
             for (GameData gameData : result.games()) {
-                stringBuilder.append("1" + gameData.gameName() + '\n');
+                stringBuilder.append(String.format("%d. %s\n", i, gameData.gameName()));
+                listOfGames.put(i, gameData);
                 i++;
             }
             return stringBuilder.toString();
@@ -77,7 +101,7 @@ public class Client {
         try {
             CreateGameRequest request = new CreateGameRequest(params[0]);
             serverFacade.createGame(request);
-            return "success";
+            return String.format("Successfully created game '%s.'", request.gameName());
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -100,9 +124,8 @@ public class Client {
                     -logout
                     -create <game>
                     -list
-                    -play
+                    -play <id> [WHITE|BLACK]
                     -observe <id>
-                    -join <id> [WHITE|BLACK]
                     """;
         }
         return """
