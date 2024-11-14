@@ -1,11 +1,16 @@
 package client;
 
+import model.GameData;
 import org.junit.jupiter.api.*;
 import requests.*;
 import results.*;
 import server.Server;
 import ui.network.ServerFacade;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static chess.ChessGame.TeamColor.*;
 
 
 public class ServerFacadeTests {
@@ -101,6 +106,43 @@ public class ServerFacadeTests {
         serverFacade.register(registerRequest);
         serverFacade.createGame(createGameRequest);
         Assertions.assertNotNull(serverFacade.listGames());
+    }
+
+    @Test
+    public void testListNoGames() throws Exception {
+        serverFacade.register(registerRequest);
+        Assertions.assertEquals(new ListGamesResult(new ArrayList<>()), serverFacade.listGames());
+    }
+
+    @Test
+    public void testListMultipleGames() throws Exception {
+        serverFacade.register(registerRequest);
+        serverFacade.createGame(createGameRequest);
+        serverFacade.createGame(createGameRequest);
+        serverFacade.createGame(createGameRequest);
+        Assertions.assertNotNull(serverFacade.listGames());
+    }
+
+    @Test
+    public void testJoinGame() throws Exception {
+        serverFacade.register(registerRequest);
+        CreateGameResult result = serverFacade.createGame(createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(WHITE, result.gameID());
+        serverFacade.joinGame(joinGameRequest);
+        ListGamesResult games = serverFacade.listGames();
+        Collection<GameData> game = games.games();
+        Assertions.assertTrue(game.toString().contains("bob"));
+    }
+
+    @Test
+    public void testJoinGameFail() throws Exception {
+        serverFacade.register(registerRequest);
+        CreateGameResult result = serverFacade.createGame(createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(WHITE, result.gameID());
+        serverFacade.joinGame(joinGameRequest);
+        Assertions.assertThrows(Exception.class, () -> {
+            serverFacade.joinGame(joinGameRequest);
+        });
     }
 
 }
