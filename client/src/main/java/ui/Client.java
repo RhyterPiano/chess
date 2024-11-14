@@ -17,7 +17,7 @@ public class Client {
     ChessBoard chessBoardPrinter = new ChessBoard();
 
     public Client() {
-        serverFacade = new ServerFacade("http://localhost:8080");
+        serverFacade = new ServerFacade("http://localhost:0");
         loggedIn = false;
     }
 
