@@ -119,10 +119,17 @@ public class Client {
     }
 
     private String observeGame(String... params) {
-        return "not implemented";
+        try {
+            int gameNumber = Integer.parseInt(params[0]);
+            chessBoardPrinter.printBoard(ChessGame.TeamColor.WHITE, new chess.ChessGame().getBoard());
+            return String.format("Congradulations! You are now observing game %d as the white color\n", gameNumber);
+        } catch (Exception e) {
+            return "Invalid game ID given\n";
+        }
     }
 
     private String playGame(String... params) {
+        try {
         int gameNumber = Integer.parseInt(params[0]);
         int gameID = listOfGames.get(gameNumber).gameID();
         String teamColor = params[1];
@@ -135,13 +142,20 @@ public class Client {
             }
 
         }
-        try {
             JoinGameRequest request = new JoinGameRequest(color, gameID);
             serverFacade.joinGame(request);
             chessBoardPrinter.printBoard(color, new chess.ChessGame().getBoard());
-            return String.format("Congradulations! You are now in game %d playing as the %s color", gameNumber, color);
+            return String.format("Congradulations! You are now in game %d playing as the %s color\n", gameNumber, color);
         } catch (Exception e) {
-            return e.getMessage();
+            String errorMessage = "Unrecognized game id\n";
+            if (e.getMessage().contains("Index")) {
+                errorMessage = "Please select a game number and a team color:\n";
+            } else if (e.getMessage().contains("null")) {
+                errorMessage = "Game not found. Please use 'list' and provide index to refer to a game\n";
+            } else if (e.getMessage().contains("Taken")) {
+                errorMessage = "Position is already taken. Please choose another or create a new game\n";
+            }
+            return errorMessage;
         }
     }
 
@@ -152,7 +166,18 @@ public class Client {
             StringBuilder stringBuilder = new StringBuilder();
             int i = 1;
             for (GameData gameData : result.games()) {
-                stringBuilder.append(String.format("%d. %s\n", i, gameData.gameName()));
+                stringBuilder.append(String.format("%d. %s: ", i, gameData.gameName()));
+                String whiteUsername = "none";
+                String blackUsername = "none";
+                if(gameData.whiteUsername() != null) {
+                    whiteUsername = gameData.whiteUsername();
+                }
+                stringBuilder.append(String.format("White = %s, ", whiteUsername));
+                if(gameData.blackUsername() != null) {
+                    blackUsername = gameData.blackUsername();
+                }
+                stringBuilder.append(String.format("Black = %s", blackUsername));
+                stringBuilder.append("\n");
                 listOfGames.put(i, gameData);
                 i++;
             }

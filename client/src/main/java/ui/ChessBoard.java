@@ -33,7 +33,7 @@ public class ChessBoard {
         drawBoard(out, color, board);
         drawHeaders(out, color);
 
-        out.print(SET_BG_COLOR_WHITE);
+        out.print(RESET_BG_COLOR);
         out.print(SET_TEXT_COLOR_BLACK);
     }
 
@@ -60,7 +60,7 @@ public class ChessBoard {
          }
          out.print(SET_TEXT_COLOR_LIGHT_GREY);
          out.print(" 0 ");
-         setBlack(out);
+         out.print(RESET_BG_COLOR);
          out.print("\n");
     }
 
@@ -77,7 +77,7 @@ public class ChessBoard {
             drawRow(out, i, board, color);
             setHeaders(out);
             out.print(" " + i + " ");
-            setBlack(out);
+            out.print(RESET_BG_COLOR);
             out.print('\n');
         }
     }

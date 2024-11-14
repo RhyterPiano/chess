@@ -17,6 +17,7 @@ public class Repl {
     public void run() {
         System.out.println("Welcome to Chess! Sign in or register to start!");
         System.out.print(client.help());
+        System.out.println();
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
