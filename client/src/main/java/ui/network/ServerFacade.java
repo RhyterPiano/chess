@@ -5,13 +5,12 @@ import com.google.gson.Gson;
 import requests.*;
 import results.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.stream.Collectors;
+
 public class ServerFacade {
     public final String serverURL;
     private String authToken;
@@ -99,9 +98,16 @@ public class ServerFacade {
     }
 
     private void checkSuccess(HttpURLConnection http) throws IOException {
-        var status = http.getResponseCode();
+        int status = http.getResponseCode();
         if (!(status / 100 == 2)) {
-            throw new IOException("checkSuccess status not in 200s");
+            String errorMsg;
+            try (InputStream errorStream = http.getErrorStream()) {
+                errorMsg = new BufferedReader(new InputStreamReader(errorStream))
+                        .lines().collect(Collectors.joining("\n"));
+            } catch (Exception e) {
+                errorMsg = "Unable to retrieve error details.";
+            }
+            throw new IOException("Request failed with status: " + status + "\nDetails: " + errorMsg);
         }
     }
 
