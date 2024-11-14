@@ -148,11 +148,11 @@ public class ChessBoard {
     }
 
     private static void setLight(PrintStream out) {
-        out.print(SET_BG_COLOR_YELLOW);
+        out.print(SET_BG_COLOR_DARK_GREY);
     }
 
     private static void setDark(PrintStream out) {
-        out.print(SET_BG_COLOR_BLUE);
+        out.print(SET_BG_COLOR_DARK_GREEN);
     }
 }
 
