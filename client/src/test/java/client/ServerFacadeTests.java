@@ -14,7 +14,7 @@ import static chess.ChessGame.TeamColor.*;
 
 
 public class ServerFacadeTests {
-    private ServerFacade serverFacade = new ServerFacade("http://localhost:8080");
+    private ServerFacade serverFacade = new ServerFacade("http://localhost:0");
     private static Server server;
     private RegisterRequest registerRequest = new RegisterRequest("bob", "bob", "bob");
     private LoginRequest loginBob = new LoginRequest("bob", "bob");
