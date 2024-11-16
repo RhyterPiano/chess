@@ -23,6 +23,7 @@ public class ChessBoard {
         chess.ChessBoard game = new chess.ChessBoard();
         game.resetBoard();
         board.printBoard(BLACK, game);
+        board.printBoard(WHITE, game);
     }
 
     void printBoard(ChessGame.TeamColor color, chess.ChessBoard board) {
@@ -83,6 +84,10 @@ public class ChessBoard {
     }
 
     private void drawRow(PrintStream out, int i, chess.ChessBoard board, ChessGame.TeamColor color) {
+        switch(color) {
+            case WHITE -> color = BLACK;
+            case BLACK -> color = WHITE;
+        }
         int[] colOrder = createRowOrder(color);
         ChessPiece[] row = board.getRow(i);
         int tileColor = i;

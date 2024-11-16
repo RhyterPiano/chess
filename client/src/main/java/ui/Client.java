@@ -122,7 +122,9 @@ public class Client {
         try {
             int gameNumber = Integer.parseInt(params[0]);
             chessBoardPrinter.printBoard(ChessGame.TeamColor.WHITE, new chess.ChessGame().getBoard());
-            return String.format("Congradulations! You are now observing game %d as the white color\n", gameNumber);
+            System.out.println();
+            chessBoardPrinter.printBoard(ChessGame.TeamColor.BLACK, new chess.ChessGame().getBoard());
+            return String.format("Congradulations! You are now observing game %d from both sides!\n", gameNumber);
         } catch (Exception e) {
             return "Invalid game ID given\n";
         }
