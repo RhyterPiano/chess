@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import server.handlers.*;
 import server.service.Serializer;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 import java.util.HashMap;
@@ -15,15 +16,13 @@ public class Server {
     private LoginHandler loginHandler = new LoginHandler();
     private LogoutHandler logoutHandler = new LogoutHandler();
     private Serializer serializer = new Serializer();
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
         Spark.staticFiles.location("web");
 
-        // Register your endpoints and handle exceptions here.
         createRoutes();
-        //This line initializes the server and can be removed once you have a functioning endpoint
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -35,6 +34,7 @@ public class Server {
     }
 
     public void createRoutes() {
+        Spark.webSocket("/ws", webSocketHandler);
         clearApplicationInit();
         registerInit();
         loginInit();
