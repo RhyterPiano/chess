@@ -51,12 +51,14 @@ public class WebSocketHandler {
         ServerMessage message = new ServerMessage(ServerMessageType.LOAD_GAME);
         int gameID = command.getGameID();
         GameData chessGame = gameDAO.getGame(gameID);
-        JsonObject combinedMessage = new JsonObject();
-        String serverMessage = serializer.toJson(message);
-        combinedMessage.add("serverMessage", JsonParser.parseString(serverMessage));
-        String gameJSON = serializer.toJson(chessGame);
-        combinedMessage.add("game", JsonParser.parseString(gameJSON));
-        session.getRemote().sendString(combinedMessage.toString());
+        // add the viewer to the game
+        message.setMessage(chessGame);
+        message.addUser("white");
+        String finalMessage = serializer.toJson(message);
+        session.getRemote().sendString(finalMessage);
+
+//        ServerMessage message1 = new ServerMessage(ServerMessageType.NOTIFICATION);
+//        session.getRemote().sendString(serializer.toJson(message1));
     }
 
     void makeMove() {

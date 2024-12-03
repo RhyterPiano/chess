@@ -1,7 +1,10 @@
 package websocket.messages;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import model.GameData;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -12,7 +15,8 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
-//    String message;
+    GameData game;
+    ArrayList<String> users = new ArrayList();
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -28,9 +32,13 @@ public class ServerMessage {
         return this.serverMessageType;
     }
 
-//    public void setMessage(Object message) {
-//        this.message = new Gson().toJson(message);
-//    }
+    public void setMessage(GameData message) {
+        this.game = message;
+    }
+
+    public void addUser(String user) {
+        users.add(user);
+    }
 
     @Override
     public boolean equals(Object o) {
