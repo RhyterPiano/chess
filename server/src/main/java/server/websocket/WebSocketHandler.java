@@ -2,6 +2,8 @@ package server.websocket;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
@@ -49,13 +51,19 @@ public class WebSocketHandler {
         ServerMessage message = new ServerMessage(ServerMessageType.LOAD_GAME);
         int gameID = command.getGameID();
         GameData chessGame = gameDAO.getGame(gameID);
-        message.setMessage(chessGame);
-        String returnMessage = serializer.toJson(message);
-        session.getRemote().sendString(returnMessage);
+        JsonObject combinedMessage = new JsonObject();
+        String serverMessage = serializer.toJson(message);
+        combinedMessage.add("serverMessage", JsonParser.parseString(serverMessage));
+        String gameJSON = serializer.toJson(chessGame);
+        combinedMessage.add("game", JsonParser.parseString(gameJSON));
+        session.getRemote().sendString(combinedMessage.toString());
     }
 
     void makeMove() {
         ;
     }
 
+
 }
+
+
