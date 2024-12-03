@@ -43,17 +43,17 @@ public class WebSocketHandler {
             case LEAVE -> leave();
             case RESIGN -> resign();
             case CONNECT -> connect(session, username, command);
-            case MAKE_MOVE -> makeMove();
+            case MAKE_MOVE -> makeMove(session, username, command);
             default -> throw new IOException("Unrecognized command type");
         }
     }
 
     void leave() {
-        ;
+
     }
 
     void resign() {
-        ;
+
     }
 
     void connect(Session session, String username, UserGameCommand command) throws IOException {
@@ -73,8 +73,8 @@ public class WebSocketHandler {
         connectionManager.add(username, session, command.getGameID());
     }
 
-    void makeMove() {
-        ;
+    void makeMove(Session session, String username, UserGameCommand command) throws IOException {
+        
     }
 
 
