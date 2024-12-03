@@ -1,6 +1,8 @@
 package server.websocket;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ServerMessage;
 
@@ -9,10 +11,18 @@ import java.util.ArrayList;
 
 public class ConnectionManager {
     public ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, ArrayList<String>> gameList = new ConcurrentHashMap<>();
+    private Gson serializer = new Gson();
 
-    public void add(String visitorName, Session session) {
+    public void add(String visitorName, Session session, int gameID) {
         var connection = new Connection(visitorName, session);
         connections.put(visitorName, connection);
+        ArrayList<String> inGame = new ArrayList<>();
+        if (gameList.containsKey(gameID)) {
+            inGame = gameList.get(gameID);
+        }
+        inGame.add(visitorName);
+        gameList.put(gameID, inGame);
     }
 
     public void remove(String visitorName) {
@@ -32,6 +42,19 @@ public class ConnectionManager {
         }
         for (var c : removeList) {
             connections.remove(c.visitorName);
+        }
+    }
+
+    public void alertJoin(int gameID, String username) throws IOException {
+        if (gameList.get(gameID) != null) {
+            for (String user : gameList.get(gameID)) {
+                Connection c = connections.get(user);
+                if (c.session.isOpen()) {
+                    ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+                    notification.addUser(username);
+                    c.send(serializer.toJson(notification));
+                }
+            }
         }
     }
 }

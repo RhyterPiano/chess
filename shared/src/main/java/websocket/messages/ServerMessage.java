@@ -16,7 +16,9 @@ import java.util.Objects;
 public class ServerMessage {
     ServerMessageType serverMessageType;
     GameData game;
-    ArrayList<String> users = new ArrayList();
+    String message;
+    String errorMessage;
+
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -37,7 +39,11 @@ public class ServerMessage {
     }
 
     public void addUser(String user) {
-        users.add(user);
+        this.message = user;
+    }
+
+    public void addErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     @Override

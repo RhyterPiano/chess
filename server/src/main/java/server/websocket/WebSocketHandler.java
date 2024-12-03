@@ -24,11 +24,20 @@ public class WebSocketHandler {
     private final MySQLAuthDAO authDAO = new MySQLAuthDAO();
     private final MySQLGameDAO gameDAO = new MySQLGameDAO();
     private final Gson serializer = new Gson();
+    private final ConnectionManager connectionManager = new ConnectionManager();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
-        String username = authDAO.getAuth(command.getAuthToken()).username();
+        String username = null;
+        try {
+            username = authDAO.getAuth(command.getAuthToken()).username();
+        } catch (Exception e) {
+            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+            errorMessage.addErrorMessage("Error: Bad AuthToken");
+            session.getRemote().sendString(serializer.toJson(errorMessage));
+            return;
+        }
 
         switch (command.getCommandType()) {
             case LEAVE -> leave();
@@ -48,17 +57,20 @@ public class WebSocketHandler {
     }
 
     void connect(Session session, String username, UserGameCommand command) throws IOException {
-        ServerMessage message = new ServerMessage(ServerMessageType.LOAD_GAME);
         int gameID = command.getGameID();
         GameData chessGame = gameDAO.getGame(gameID);
-        // add the viewer to the game
+        if (chessGame == null) {
+            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+            errorMessage.addErrorMessage("Error, the Game ID does not exist");
+            session.getRemote().sendString(serializer.toJson(errorMessage));
+            return;
+        }
+        ServerMessage message = new ServerMessage(ServerMessageType.LOAD_GAME);
         message.setMessage(chessGame);
-        message.addUser("white");
         String finalMessage = serializer.toJson(message);
         session.getRemote().sendString(finalMessage);
-
-//        ServerMessage message1 = new ServerMessage(ServerMessageType.NOTIFICATION);
-//        session.getRemote().sendString(serializer.toJson(message1));
+        connectionManager.alertJoin(gameID, username);
+        connectionManager.add(username, session, command.getGameID());
     }
 
     void makeMove() {
