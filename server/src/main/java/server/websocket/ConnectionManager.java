@@ -99,7 +99,7 @@ public class ConnectionManager {
                 Connection c = connections.get(user);
                 if (c.session.isOpen()) {
                     ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-                    String message = String.format("%s has resigned, and the game is now over. % wins!", username, winner);
+                    String message = String.format("%s has resigned, and the game is now over. %s wins!", username, winner);
                     notification.addMessage(message);
 
                     c.send(serializer.toJson(notification));
