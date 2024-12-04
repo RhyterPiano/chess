@@ -3,6 +3,7 @@ package server.websocket;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.Gson;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ServerMessage;
 
@@ -57,4 +58,18 @@ public class ConnectionManager {
             }
         }
     }
+
+    public void alertGameUpdate(int gameID, GameData gameData) throws IOException {
+        if (gameList.get(gameID) != null) {
+            for (String user : gameList.get(gameID)) {
+                Connection c = connections.get(user);
+                if (c.session.isOpen()) {
+                    ServerMessage gameUpdate = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+                    gameUpdate.setGame(gameData);
+                    c.send(serializer.toJson(gameUpdate));
+                }
+            }
+        }
+    }
+
 }

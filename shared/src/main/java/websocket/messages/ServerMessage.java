@@ -1,10 +1,7 @@
 package websocket.messages;
 
-import chess.ChessGame;
-import com.google.gson.Gson;
 import model.GameData;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -34,8 +31,8 @@ public class ServerMessage {
         return this.serverMessageType;
     }
 
-    public void setMessage(GameData message) {
-        this.game = message;
+    public void setGame(GameData game) {
+        this.game = game;
     }
 
     public void addUser(String user) {

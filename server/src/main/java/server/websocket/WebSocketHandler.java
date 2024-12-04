@@ -2,14 +2,12 @@ package server.websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import websocket.messages.*;
 import websocket.commands.*;
 import java.io.IOException;
 import java.util.Collection;
@@ -69,7 +67,7 @@ public class WebSocketHandler {
             return;
         }
         ServerMessage message = new ServerMessage(ServerMessageType.LOAD_GAME);
-        message.setMessage(chessGame);
+        message.setGame(chessGame);
         String finalMessage = serializer.toJson(message);
         session.getRemote().sendString(finalMessage);
         connectionManager.alertJoin(gameID, username);
@@ -84,6 +82,18 @@ public class WebSocketHandler {
             session.getRemote().sendString(serializer.toJson(message));
             return;
         }
+
+        ChessGame game = gameData.game();
+        try {
+            game.makeMove(move);
+        } catch (InvalidMoveException e) {
+            throw new IOException("Validated the move but it still failed. Check validation process!");
+        }
+        gameData = gameData.updateGame(game);
+        gameDAO.updateGame(gameData.gameID(), gameData);
+
+        connectionManager.alertGameUpdate(gameData.gameID(), gameData);
+
 
 
 
