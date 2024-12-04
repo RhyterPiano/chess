@@ -21,7 +21,7 @@ public class UserGameCommand {
 
     private final ChessGame.TeamColor color;
 
-    private ChessMove move;
+    private final ChessMove move;
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID, ChessMove move, ChessGame.TeamColor color) {
         this.commandType = commandType;
@@ -54,8 +54,8 @@ public class UserGameCommand {
         return color;
     }
 
-    public void addChessMove(ChessMove move) {
-        this.move = move;
+    public ChessMove getMove() {
+        return move;
     }
 
     @Override

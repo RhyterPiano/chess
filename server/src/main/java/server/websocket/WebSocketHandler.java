@@ -1,6 +1,7 @@
 package server.websocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -11,6 +12,8 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.messages.*;
 import websocket.commands.*;
 import java.io.IOException;
+import java.util.Collection;
+
 import server.dataaccess.MySQLUserDAO;
 import server.dataaccess.MySQLAuthDAO;
 import server.dataaccess.MySQLGameDAO;
@@ -29,7 +32,7 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
-        String username = null;
+        String username;
         try {
             username = authDAO.getAuth(command.getAuthToken()).username();
         } catch (Exception e) {
@@ -74,7 +77,39 @@ public class WebSocketHandler {
     }
 
     void makeMove(Session session, String username, UserGameCommand command) throws IOException {
-        
+        ChessMove move = command.getMove();
+        GameData gameData = gameDAO.getGame(command.getGameID());
+        ServerMessage message = validatePermissions(move, username, command, gameData);
+        if (message != null) {
+            session.getRemote().sendString(serializer.toJson(message));
+            return;
+        }
+
+
+
+    }
+
+    ServerMessage validatePermissions(ChessMove move, String username, UserGameCommand command, GameData gameData) {
+        ChessGame chessGame = gameData.game();
+        ChessGame.TeamColor color;
+        if (gameData.whiteUsername().equals(username)) {
+            color = ChessGame.TeamColor.WHITE;
+        } else if (gameData.blackUsername().equals(username)) {
+            color = ChessGame.TeamColor.BLACK;
+        } else {
+            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+            errorMessage.addErrorMessage("Error: Piece does not belong to the caller");
+            return errorMessage;
+        }
+        if (chessGame.getTeamTurn() == color) {
+            Collection<ChessMove> moves = chessGame.validMoves(move.getStartPosition());
+            if (moves.contains(move)) {
+                return null;
+            }
+        }
+        ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+        errorMessage.addErrorMessage("Error: Not the caller's turn");
+        return errorMessage;
     }
 
 
