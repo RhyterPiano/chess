@@ -21,7 +21,6 @@ import websocket.messages.ServerMessage.ServerMessageType;
 @WebSocket
 public class WebSocketHandler {
     private final ConnectionManager connections = new ConnectionManager();
-    private final MySQLUserDAO userDAO = new MySQLUserDAO();
     private final MySQLAuthDAO authDAO = new MySQLAuthDAO();
     private final MySQLGameDAO gameDAO = new MySQLGameDAO();
     private final Gson serializer = new Gson();
@@ -41,20 +40,40 @@ public class WebSocketHandler {
         }
 
         switch (command.getCommandType()) {
-            case LEAVE -> leave();
-            case RESIGN -> resign();
+            case LEAVE -> leave(session, username, command);
+            case RESIGN -> resign(session, username, command);
             case CONNECT -> connect(session, username, command);
             case MAKE_MOVE -> makeMove(session, username, command);
             default -> throw new IOException("Unrecognized command type");
         }
     }
 
-    void leave() {
+    void leave(Session session, String username, UserGameCommand command) throws IOException {
 
     }
 
-    void resign() {
+    void resign(Session session, String username, UserGameCommand command) throws IOException {
+        int gameID = command.getGameID();
+        GameData gameData = gameDAO.getGame(gameID);
+        if (!(gameData.blackUsername().equals(username) || gameData.whiteUsername().equals(username))) {
+            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+            errorMessage.addErrorMessage("Observer cannot resign from the game. Try to leave instead");
+            session.getRemote().sendString(serializer.toJson(errorMessage));
+            return;
+        }
 
+        ChessGame game = gameData.game();
+        game.setOver(true);
+        gameData = gameData.updateGame(game);
+        gameDAO.updateGame(gameID, gameData);
+
+        String winner;
+        if (gameData.whiteUsername().equals(username)) {
+            winner = gameData.blackUsername();
+        } else {
+            winner = gameData.whiteUsername();
+        }
+        connectionManager.alertResign(username, winner, gameID);
     }
 
     void connect(Session session, String username, UserGameCommand command) throws IOException {
@@ -84,6 +103,12 @@ public class WebSocketHandler {
         }
 
         ChessGame game = gameData.game();
+        if(game.isOver()) {
+            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+            errorMessage.addErrorMessage("The game is over. Please join a different one");
+            session.getRemote().sendString(serializer.toJson(errorMessage));
+            return;
+        }
         try {
             game.makeMove(move);
         } catch (InvalidMoveException e) {

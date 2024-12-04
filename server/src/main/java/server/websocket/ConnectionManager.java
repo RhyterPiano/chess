@@ -6,6 +6,7 @@ import chess.ChessMove;
 import com.google.gson.Gson;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
+import server.Server;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -67,6 +68,7 @@ public class ConnectionManager {
                 if (c.session.isOpen()) {
                     ServerMessage gameUpdate = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
                     gameUpdate.setGame(gameData);
+
                     c.send(serializer.toJson(gameUpdate));
                 }
             }
@@ -84,6 +86,22 @@ public class ConnectionManager {
                         message = message + String.format("\nThe game is now in %s!", condition);
                     }
                     notification.addMessage(message);
+
+                    c.send(serializer.toJson(notification));
+                }
+            }
+        }
+    }
+
+    public void alertResign(String username, String winner, int gameID) throws IOException {
+        if (gameList.get(gameID) != null) {
+            for (String user : gameList.get(gameID)) {
+                Connection c = connections.get(user);
+                if (c.session.isOpen()) {
+                    ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+                    String message = String.format("%s has resigned, and the game is now over. % wins!", username, winner);
+                    notification.addMessage(message);
+
                     c.send(serializer.toJson(notification));
                 }
             }

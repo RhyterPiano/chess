@@ -12,10 +12,9 @@ import java.util.Objects;
  */
 public class ChessGame {
     private TeamColor teamTurn = TeamColor.WHITE;
-//    private Collection<ChessMove> validMoves = new HashSet<>();
     private ChessBoard board = new ChessBoard();
-//    private Collection<Collection<ChessMove>> whiteMoves = new HashSet<>();
-//    private Collection<Collection<ChessMove>> blackMoves = new HashSet<>();
+
+    private boolean isOver = false;
 
     public ChessGame() {
         board.resetBoard();
@@ -43,6 +42,14 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    public boolean isOver() {
+        return isOver;
+    }
+
+    public void setOver(boolean over) {
+        isOver = over;
     }
 
     public ChessGame makeCopy() {

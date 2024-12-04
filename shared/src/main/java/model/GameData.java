@@ -12,4 +12,6 @@ public record GameData (int gameID, String whiteUsername, String blackUsername, 
     public GameData updateGame(chess.ChessGame chessGame) {
         return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
     }
+
+
 }
