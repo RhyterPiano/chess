@@ -35,8 +35,8 @@ public class ServerMessage {
         this.game = game;
     }
 
-    public void addUser(String user) {
-        this.message = user;
+    public void addMessage(String message) {
+        this.message = message;
     }
 
     public void addErrorMessage(String errorMessage) {

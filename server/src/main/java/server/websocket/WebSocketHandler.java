@@ -91,9 +91,19 @@ public class WebSocketHandler {
         }
         gameData = gameData.updateGame(game);
         gameDAO.updateGame(gameData.gameID(), gameData);
+        String condition;
+        if (game.isInCheckmate(ChessGame.TeamColor.BLACK) || game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+            condition = "Checkmate!";
+        } else if (game.isInCheck(ChessGame.TeamColor.BLACK) || game.isInCheck(ChessGame.TeamColor.WHITE)) {
+            condition = "Check!";
+        } else if (game.isInStalemate(ChessGame.TeamColor.BLACK) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
+            condition = "Stalemate";
+        } else {
+            condition = null;
+        }
 
         connectionManager.alertGameUpdate(gameData.gameID(), gameData);
-
+        connectionManager.alertNotification(username, gameData.gameID(), move, condition);
 
 
 

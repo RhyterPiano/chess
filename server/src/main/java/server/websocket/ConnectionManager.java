@@ -2,6 +2,7 @@ package server.websocket;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
@@ -52,7 +53,7 @@ public class ConnectionManager {
                 Connection c = connections.get(user);
                 if (c.session.isOpen()) {
                     ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-                    notification.addUser(username);
+                    notification.addMessage(username);
                     c.send(serializer.toJson(notification));
                 }
             }
@@ -67,6 +68,23 @@ public class ConnectionManager {
                     ServerMessage gameUpdate = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
                     gameUpdate.setGame(gameData);
                     c.send(serializer.toJson(gameUpdate));
+                }
+            }
+        }
+    }
+
+    public void alertNotification(String username, int gameID, ChessMove move, String condition) throws IOException {
+        if (gameList.get(gameID) != null) {
+            for (String user : gameList.get(gameID)) {
+                Connection c = connections.get(user);
+                if (c.session.isOpen() && !user.equals(username)) {
+                    ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+                    String message = String.format("%s has made a move! They performed the move %s", username, move.toString());
+                    if (condition != null) {
+                        message = message + String.format("\nThe game is now in %s!", condition);
+                    }
+                    notification.addMessage(message);
+                    c.send(serializer.toJson(notification));
                 }
             }
         }
