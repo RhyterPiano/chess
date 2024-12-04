@@ -56,13 +56,15 @@ public class WebSocketHandler {
         int gameID = command.getGameID();
         GameData gameData = gameDAO.getGame(gameID);
         if (!(gameData.blackUsername().equals(username) || gameData.whiteUsername().equals(username))) {
-            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
-            errorMessage.addErrorMessage("Observer cannot resign from the game. Try to leave instead");
-            session.getRemote().sendString(serializer.toJson(errorMessage));
+            sendError(session, "Observer cannot resign from the game. Try to leave instead");
             return;
         }
 
         ChessGame game = gameData.game();
+        if (game.isOver()) {
+            sendError(session, "The game is already over");
+            return;
+        }
         game.setOver(true);
         gameData = gameData.updateGame(game);
         gameDAO.updateGame(gameID, gameData);
@@ -80,9 +82,7 @@ public class WebSocketHandler {
         int gameID = command.getGameID();
         GameData chessGame = gameDAO.getGame(gameID);
         if (chessGame == null) {
-            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
-            errorMessage.addErrorMessage("Error, the Game ID does not exist");
-            session.getRemote().sendString(serializer.toJson(errorMessage));
+            sendError(session, "Error, the Game ID does not exist");
             return;
         }
         ServerMessage message = new ServerMessage(ServerMessageType.LOAD_GAME);
@@ -104,9 +104,7 @@ public class WebSocketHandler {
 
         ChessGame game = gameData.game();
         if(game.isOver()) {
-            ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
-            errorMessage.addErrorMessage("The game is over. Please join a different one");
-            session.getRemote().sendString(serializer.toJson(errorMessage));
+            sendError(session, "The game is over. Please join a different one");
             return;
         }
         try {
@@ -155,6 +153,12 @@ public class WebSocketHandler {
         ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
         errorMessage.addErrorMessage("Error: Not the caller's turn");
         return errorMessage;
+    }
+
+    void sendError(Session session, String error) throws IOException {
+        ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+        errorMessage.addErrorMessage(error);
+        session.getRemote().sendString(serializer.toJson(errorMessage));
     }
 
 
