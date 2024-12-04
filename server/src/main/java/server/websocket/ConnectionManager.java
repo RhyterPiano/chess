@@ -28,8 +28,16 @@ public class ConnectionManager {
         gameList.put(gameID, inGame);
     }
 
-    public void remove(String visitorName) {
-        connections.remove(visitorName);
+    public void remove(int gameID, String username) {
+        connections.remove(username);
+        if (gameList.get(gameID) !=  null) {
+            for (String user : gameList.get(gameID)) {
+                if (user.equals(username)) {
+                    gameList.get(gameID).remove(user);
+                    return;
+                }
+            }
+        }
     }
 
     public void broadcast(String excludeVisitorName, ServerMessage message) throws IOException {
@@ -53,9 +61,20 @@ public class ConnectionManager {
             for (String user : gameList.get(gameID)) {
                 Connection c = connections.get(user);
                 if (c.session.isOpen()) {
-                    ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-                    notification.addMessage(username);
-                    c.send(serializer.toJson(notification));
+                    String message = String.format("%s has joined the game!", username);
+                    sendNotification(c, message);
+                }
+            }
+        }
+    }
+
+    public void alertLeaveGame(int gameID, String username) throws IOException {
+        if (gameList.get(gameID) != null) {
+            for (String user : gameList.get(gameID)) {
+                Connection c = connections.get(user);
+                if (c.session.isOpen()) {
+                    String message = String.format("%s has left the game", username);
+                    sendNotification(c, message);
                 }
             }
         }
@@ -80,14 +99,11 @@ public class ConnectionManager {
             for (String user : gameList.get(gameID)) {
                 Connection c = connections.get(user);
                 if (c.session.isOpen() && !user.equals(username)) {
-                    ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
                     String message = String.format("%s has made a move! They performed the move %s", username, move.toString());
                     if (condition != null) {
                         message = message + String.format("\nThe game is now in %s!", condition);
                     }
-                    notification.addMessage(message);
-
-                    c.send(serializer.toJson(notification));
+                    sendNotification(c, message);
                 }
             }
         }
@@ -98,14 +114,17 @@ public class ConnectionManager {
             for (String user : gameList.get(gameID)) {
                 Connection c = connections.get(user);
                 if (c.session.isOpen()) {
-                    ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
                     String message = String.format("%s has resigned, and the game is now over. %s wins!", username, winner);
-                    notification.addMessage(message);
-
-                    c.send(serializer.toJson(notification));
+                    sendNotification(c, message);
                 }
             }
         }
+    }
+
+    public void sendNotification(Connection c, String message) throws IOException {
+        ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        notification.addMessage(message);
+        c.send(serializer.toJson(notification));
     }
 
 }

@@ -49,13 +49,23 @@ public class WebSocketHandler {
     }
 
     void leave(Session session, String username, UserGameCommand command) throws IOException {
+        int gameID = command.getGameID();
+        GameData gameData = gameDAO.getGame(gameID);
+        if (username.equals(gameData.whiteUsername())) {
+            gameData = gameData.updateWhiteUser(null);
+        } else if (username.equals(gameData.blackUsername())) {
+            gameData = gameData.updateBlackUser(null);
+        }
+        gameDAO.updateGame(gameID, gameData);
 
+        connectionManager.remove(gameID, username);
+        connectionManager.alertLeaveGame(gameID, username);
     }
 
     void resign(Session session, String username, UserGameCommand command) throws IOException {
         int gameID = command.getGameID();
         GameData gameData = gameDAO.getGame(gameID);
-        if (!(gameData.blackUsername().equals(username) || gameData.whiteUsername().equals(username))) {
+        if (!(username.equals(gameData.blackUsername()) || username.equals(gameData.whiteUsername()))) {
             sendError(session, "Observer cannot resign from the game. Try to leave instead");
             return;
         }
