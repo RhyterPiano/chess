@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import model.AuthData;
 import model.GameData;
 import requests.*;
 import results.*;
@@ -12,11 +13,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Client {
-    ServerFacade serverFacade;
-    WebSocketFacade webSocketFacade;
+    private ServerFacade serverFacade;
+    private WebSocketFacade webSocketFacade;
     private boolean loggedIn;
     private HashMap<Integer, GameData> listOfGames;
-    ChessBoard chessBoardPrinter = new ChessBoard();
+    private ChessBoard chessBoardPrinter = new ChessBoard();
+    private String username;
+    private String authToken;
 
     public Client(Repl repl) {
         serverFacade = new ServerFacade("http://localhost:8080");
@@ -80,8 +83,9 @@ public class Client {
     public String login(String... params) {
        try {
            LoginRequest request = new LoginRequest(params[0], params[1]);
-           serverFacade.login(request);
+           this.authToken = serverFacade.login(request);
            loggedIn = true;
+           this.username = request.username();
            return String.format("Logged in as %s.\n%s\n", request.username(), help());
        } catch (Exception e) {
            String errorMessage = "";
@@ -97,8 +101,9 @@ public class Client {
     public String register(String... params) {
         try {
             RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
-            serverFacade.register(request);
+            this.authToken = serverFacade.register(request);
             loggedIn = true;
+            this.username = request.username();
             return String.format("Registered user %s, you are now logged in!", request.username());
         } catch (Exception e) {
             String errorMessage = "";
@@ -115,6 +120,8 @@ public class Client {
         try {
             serverFacade.logout();
             loggedIn = false;
+            this.username = null;
+            this.authToken = null;
             return String.format("Successfully logged out!\n%s", help());
         } catch (Exception e) {
             return e.getMessage();
@@ -149,6 +156,10 @@ public class Client {
         }
             JoinGameRequest request = new JoinGameRequest(color, gameID);
             serverFacade.joinGame(request);
+
+            AuthData authData = new AuthData(authToken, username);
+            webSocketFacade.connectGame(authData, gameID);
+
             chessBoardPrinter.printBoard(color, new chess.ChessGame().getBoard());
             return String.format("Congradulations! You are now in game %d playing as the %s color\n", gameNumber, color);
         } catch (Exception e) {

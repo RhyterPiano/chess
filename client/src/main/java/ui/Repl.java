@@ -42,6 +42,16 @@ public class Repl implements ServerMessageHandler {
 
     @Override
     public void notify(ServerMessage serverMessage) {
-        System.out.println("We made it here!!\n\n");
+        System.out.println("%s\n\n");
+    }
+
+    @Override
+    public void loadGame(ServerMessage loadGameMessage) {
+
+    }
+
+    @Override
+    public void notifyError(ServerMessage errorMessage) {
+
     }
 }

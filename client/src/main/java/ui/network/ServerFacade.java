@@ -20,16 +20,18 @@ public class ServerFacade {
         serverURL = url;
     }
 
-    public void register(RegisterRequest request) throws Exception {
+    public String register(RegisterRequest request) throws Exception {
         var path = "/user";
         RegisterResult result = makeRequest("POST", path, request, RegisterResult.class, false);
         authToken = result.authToken();
+        return authToken;
     }
 
-    public void login(LoginRequest request) throws Exception {
+    public String login(LoginRequest request) throws Exception {
         var path = "/session";
         LoginResult result = makeRequest("POST", path, request, LoginResult.class, false);
         authToken = result.authToken();
+        return authToken;
     }
 
     public void logout() throws Exception {
