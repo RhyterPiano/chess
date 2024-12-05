@@ -1,5 +1,6 @@
 package ui.network;
 
+import model.AuthData;
 import websocket.messages.ServerMessage;
 import websocket.commands.UserGameCommand;
 import javax.websocket.*;
@@ -12,6 +13,7 @@ public class WebSocketFacade extends Endpoint {
 
     Session session;
     ServerMessageHandler serverMessageHandler;
+    Gson serializer = new Gson();
 
     public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) {
         try {
@@ -37,6 +39,16 @@ public class WebSocketFacade extends Endpoint {
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+
+    public void connectGame(AuthData user, int gameID) throws IOException {
+        try {
+            var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT,
+                    user.authToken(), gameID, null, null);
+            this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
+        } catch (IOException e) {
+            throw e;
+        }
     }
 
 

@@ -1,9 +1,12 @@
 package ui;
 
+import ui.network.ServerMessageHandler;
+import websocket.messages.ServerMessage;
+
 import static chess.EscapeSequences.*;
 import java.util.Scanner;
 
-public class Repl {
+public class Repl implements ServerMessageHandler {
     private Client client;
 
     public void main() {
@@ -11,7 +14,7 @@ public class Repl {
     }
 
     public Repl() {
-        client = new Client();
+        client = new Client(this);
     }
 
     public void run() {
@@ -37,4 +40,8 @@ public class Repl {
     }
 
 
+    @Override
+    public void notify(ServerMessage serverMessage) {
+        System.out.println("We made it here!!\n\n");
+    }
 }

@@ -5,6 +5,7 @@ import model.GameData;
 import requests.*;
 import results.*;
 import ui.network.ServerFacade;
+import ui.network.WebSocketFacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,12 +13,14 @@ import java.util.HashMap;
 
 public class Client {
     ServerFacade serverFacade;
+    WebSocketFacade webSocketFacade;
     private boolean loggedIn;
     private HashMap<Integer, GameData> listOfGames;
     ChessBoard chessBoardPrinter = new ChessBoard();
 
-    public Client() {
+    public Client(Repl repl) {
         serverFacade = new ServerFacade("http://localhost:8080");
+        webSocketFacade = new WebSocketFacade("http://localhost:8080", repl);
         loggedIn = false;
     }
 
