@@ -16,10 +16,12 @@ public class Client {
     private ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
     private boolean loggedIn;
+    private boolean inGame;
     private HashMap<Integer, GameData> listOfGames;
     private ChessBoard chessBoardPrinter = new ChessBoard();
     private String username;
     private String authToken;
+    private ChessGame.TeamColor teamColor;
 
     public Client(Repl repl) {
         serverFacade = new ServerFacade("http://localhost:8080");
@@ -36,7 +38,18 @@ public class Client {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            if (loggedIn) {
+            if (inGame) {
+                return switch (cmd) {
+                    case "help" -> help();
+                    case "redraw" -> redrawBoard();
+                    case "leave" -> leave();
+                    case "move" -> makeMove(params);
+                    case "resign" -> resign();
+                    case "show" -> showMoves();
+                    default -> String.format("Unrecognized command. Here are your options:\n%s", help());
+                };
+            }
+            else if (loggedIn) {
                 return switch (cmd) {
                     case "help" -> help();
                     case "logout" -> logout();
@@ -62,7 +75,16 @@ public class Client {
     }
 
     public String help() {
-        if(loggedIn) {
+        if (inGame) {
+            return """
+                    -help
+                    -redraw (Redraws the board)
+                    -leave
+                    -move <starting position, ending position>
+                    -resign
+                    -show <position>
+                    """;
+        } else if (loggedIn) {
             return """
                     -help
                     -logout
@@ -145,23 +167,21 @@ public class Client {
         int gameNumber = Integer.parseInt(params[0]);
         int gameID = listOfGames.get(gameNumber).gameID();
         String teamColor = params[1];
-        ChessGame.TeamColor color;
         switch(teamColor) {
-            case "white" -> color = ChessGame.TeamColor.WHITE;
-            case "black" -> color = ChessGame.TeamColor.BLACK;
+            case "white" -> this.teamColor = ChessGame.TeamColor.WHITE;
+            case "black" -> this.teamColor = ChessGame.TeamColor.BLACK;
             default -> {
                 return "Invalid color, please try again\n";
             }
 
         }
-            JoinGameRequest request = new JoinGameRequest(color, gameID);
+            JoinGameRequest request = new JoinGameRequest(this.teamColor, gameID);
             serverFacade.joinGame(request);
 
             AuthData authData = new AuthData(authToken, username);
             webSocketFacade.connectGame(authData, gameID);
 
-            chessBoardPrinter.printBoard(color, new chess.ChessGame().getBoard());
-            return String.format("Congradulations! You are now in game %d playing as the %s color\n", gameNumber, color);
+            return String.format("Congradulations! You are now in game %d playing as the %s color\n", gameNumber, this.teamColor);
         } catch (Exception e) {
             String errorMessage = "Unrecognized game id\n";
             if (e.getMessage().contains("Index")) {
@@ -219,5 +239,27 @@ public class Client {
         }
     }
 
+    public ChessGame.TeamColor getTeamColor() {
+        return teamColor;
+    }
 
+    public String redrawBoard() {
+        return "not implemented";
+    }
+
+    public String leave() {
+        return "not implemented";
+    }
+
+    public String makeMove(String... params) {
+        return "not implemented";
+    }
+
+    public String resign() {
+        return "not implemented";
+    }
+
+    public String showMoves(String... params) {
+        return "not implemented";
+    }
 }

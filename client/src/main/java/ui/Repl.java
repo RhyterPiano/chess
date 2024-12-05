@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessGame;
+import model.GameData;
 import ui.network.ServerMessageHandler;
 import websocket.messages.ServerMessage;
 
@@ -8,6 +10,7 @@ import java.util.Scanner;
 
 public class Repl implements ServerMessageHandler {
     private Client client;
+    private ChessBoard chessBoardPrinter = new ChessBoard();
 
     public void main() {
         run();
@@ -47,7 +50,13 @@ public class Repl implements ServerMessageHandler {
 
     @Override
     public void loadGame(ServerMessage loadGameMessage) {
+        GameData gameData = loadGameMessage.getGame();
+        chess.ChessBoard board = gameData.game().getBoard();
+        ChessGame.TeamColor teamColor = client.getTeamColor();
+        chessBoardPrinter.printBoard(teamColor, board);
 
+        String message = String.format("You are now viewing the game from the %s team position", teamColor.toString());
+        System.out.println(message);
     }
 
     @Override
