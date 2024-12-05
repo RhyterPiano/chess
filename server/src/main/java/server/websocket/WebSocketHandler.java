@@ -106,17 +106,18 @@ public class WebSocketHandler {
     void makeMove(Session session, String username, UserGameCommand command) throws IOException {
         ChessMove move = command.getMove();
         GameData gameData = gameDAO.getGame(command.getGameID());
+        ChessGame game = gameData.game();
+        if(game.isOver()) {
+            sendError(session, "The game is over. Please join a different one");
+            return;
+        }
+
         ServerMessage message = validatePermissions(move, username, command, gameData);
         if (message != null) {
             session.getRemote().sendString(serializer.toJson(message));
             return;
         }
 
-        ChessGame game = gameData.game();
-        if(game.isOver()) {
-            sendError(session, "The game is over. Please join a different one");
-            return;
-        }
         try {
             game.makeMove(move);
         } catch (InvalidMoveException e) {
@@ -158,7 +159,12 @@ public class WebSocketHandler {
             Collection<ChessMove> moves = chessGame.validMoves(move.getStartPosition());
             if (moves.contains(move)) {
                 return null;
+            } else {
+                ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
+                errorMessage.addErrorMessage("Invalid move, type show <position> to see valid moves");
+                return errorMessage;
             }
+
         }
         ServerMessage errorMessage = new ServerMessage(ServerMessageType.ERROR);
         errorMessage.addErrorMessage("Error: Not the caller's turn");

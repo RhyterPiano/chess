@@ -1,6 +1,8 @@
 package ui.network;
 
+import chess.ChessMove;
 import model.AuthData;
+import org.eclipse.jetty.server.Authentication;
 import websocket.messages.ServerMessage;
 import websocket.commands.UserGameCommand;
 import javax.websocket.*;
@@ -60,6 +62,12 @@ public class WebSocketFacade extends Endpoint {
     public void resign(AuthData user, int gameID) throws IOException {
         var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.RESIGN,
                 user.authToken(), gameID, null, null);
+        this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
+    }
+
+    public void makeMove(AuthData user, int gameID, ChessMove move) throws IOException {
+        var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE,
+                user.authToken(), gameID, move, null);
         this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
     }
 

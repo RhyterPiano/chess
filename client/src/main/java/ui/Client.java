@@ -177,7 +177,7 @@ public class Client {
             return String.format("Now observing game %d from the %s color pov", gameNumber, this.teamColor);
 
         } catch (Exception e) {
-            return "Invalid game ID given\n";
+            return "Input should contain a valid gameID and a color\n";
         }
     }
 
@@ -292,7 +292,17 @@ public class Client {
             ChessPosition startPosition = generatePosition(start);
             ChessPosition endPosition = generatePosition(end);
             ChessPiece.PieceType promotionPiece = null;
-            if (board.getPiece(startPosition).getPieceType().equals(ChessPiece.PieceType.PAWN) && startPosition.getRow() == 7) {
+            ChessPiece myPiece = board.getPiece(startPosition);
+            int promotionRow;
+            if (myPiece == null) {
+                return "There is no piece at the starting position, please try again\n";
+            }
+            switch (myPiece.getTeamColor()) {
+                case WHITE -> promotionRow = 7;
+                case BLACK -> promotionRow = 1;
+                default -> promotionRow = 0;
+            }
+            if (myPiece.getPieceType().equals(ChessPiece.PieceType.PAWN) && startPosition.getRow() == promotionRow) {
                 do {
                     System.out.println("What would you like to update your pawn to be?");
                     System.out.println("(q)ueen, (b)ishop, (k)night, or (r)ook?\n");
@@ -310,8 +320,14 @@ public class Client {
             }
             ChessMove chessMove = new ChessMove(startPosition, endPosition, promotionPiece);
 
+            try {
+                webSocketFacade.makeMove(authData, gameID, chessMove);
+            } catch (IOException e) {
+                return "Error while trying to perform the move. Please try again.\n";
+            }
 
-            return "unfinsihed";
+
+            return "Move sent... (FOR TESTING)";
         } catch (IOException e) {
             return "Unrecognized move. Values should range from a-h and 1-8\n";
         }
