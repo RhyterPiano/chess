@@ -53,7 +53,7 @@ public class Client {
                     case "leave" -> leave();
                     case "move" -> makeMove(params);
                     case "resign" -> resign();
-                    case "show" -> showMoves();
+                    case "show" -> showMoves(params);
                     default -> String.format("Unrecognized command. Here are your options:\n%s", help());
                 };
             }
@@ -281,12 +281,17 @@ public class Client {
     }
 
     public String makeMove(String... params) {
-        String move = params[0];
+        String move;
+        try {
+            move = params[0];
+        } catch (Exception e) {
+            move = "";
+        }
         if (move.length() != 4) {
             return "Unreccognized move, please provide a move of the form a1b2\n";
         }
-        String start = move.substring(0,2);
-        String end = move.substring(2,4);
+        String start = move.substring(0, 2);
+        String end = move.substring(2, 4);
 
         try {
             ChessPosition startPosition = generatePosition(start);
@@ -332,7 +337,28 @@ public class Client {
     }
 
     public String showMoves(String... params) {
-        return "not implemented";
+        String position;
+        try {
+            position = params[0];
+        } catch (Exception e) {
+            return "Please provide a location\n";
+        }
+        if (position.length() != 2) {
+            return "Unrecognized position. Please format it in the form a1\n";
+        }
+        //get moves and print new board
+        try {
+            ChessPosition myPosition = generatePosition(position);
+            if (board.getPiece(myPosition) == null) {
+                throw new IOException();
+            }
+            chessBoardPrinter.setShowMovesPosition(myPosition);
+            chessBoardPrinter.printBoard(teamColor, board);
+            return "";
+        } catch (Exception e) {
+            return "Invalid Position\n";
+        }
+
     }
 
     public void setBoard(chess.ChessBoard board) {

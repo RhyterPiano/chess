@@ -1,17 +1,24 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.HashSet;
 
 import static chess.ChessGame.TeamColor.*;
 import static chess.EscapeSequences.*;
 
 
 public class ChessBoard {
+
+    private ChessPosition showMovesPosition = null;
+    private Collection<ChessPosition> moveCollection = new HashSet<>();
 
     public ChessBoard() {
 
@@ -71,6 +78,13 @@ public class ChessBoard {
 
 
     private void drawBoard(PrintStream out, ChessGame.TeamColor color, chess.ChessBoard board) {
+        if (this.showMovesPosition != null) {
+            ChessGame game = new ChessGame();
+            game.setBoard(board);
+            game.setTeamTurn(board.getPiece(this.showMovesPosition).getTeamColor());
+            setMoves(game);
+            this.showMovesPosition = null;
+        }
         int[] rowNums = createRowOrder(color);
         for(int i : rowNums) {
             setHeaders(out);
@@ -81,6 +95,7 @@ public class ChessBoard {
             out.print(RESET_BG_COLOR);
             out.print('\n');
         }
+        moveCollection = new HashSet<>();
     }
 
     private void drawRow(PrintStream out, int i, chess.ChessBoard board, ChessGame.TeamColor color) {
@@ -96,6 +111,9 @@ public class ChessBoard {
         }
         for(int col : colOrder) {
             tileColor = doCheckerBoard(out, tileColor);
+            if (selectSquare(i, col)) {
+                setSelectColor(out, tileColor);
+            }
             if (row[col-1] == null) {
                 out.print(EMPTY);
             } else {
@@ -103,6 +121,20 @@ public class ChessBoard {
                 out.print(row[col-1]);
             }
         }
+    }
+
+    void setSelectColor(PrintStream out, int i) {
+        i = i % 2;
+        if (i == 0) {
+            out.print(SET_BG_COLOR_MAGENTA);
+        } else {
+            out.print(SET_BG_COLOR_RED);
+        }
+    }
+
+    boolean selectSquare(int row, int col) {
+        ChessPosition position = new ChessPosition(row, col);
+        return moveCollection.contains(position);
     }
 
     private int[] createRowOrder(ChessGame.TeamColor color) {
@@ -144,6 +176,17 @@ public class ChessBoard {
         switch(piece.getTeamColor()) {
             case WHITE -> out.print(SET_TEXT_COLOR_WHITE);
             case BLACK -> out.print(SET_TEXT_COLOR_BLACK);
+        }
+    }
+
+    public void setShowMovesPosition(ChessPosition showMovesPosition) {
+        this.showMovesPosition = showMovesPosition;
+    }
+
+    public void setMoves(chess.ChessGame game) {
+        Collection<ChessMove> moves = game.validMoves(showMovesPosition);
+        for (ChessMove move : moves) {
+            this.moveCollection.add(move.getEndPosition());
         }
     }
 
