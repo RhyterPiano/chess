@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessPiece;
 import model.GameData;
 import ui.network.ServerMessageHandler;
 import websocket.messages.ServerMessage;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 public class Repl implements ServerMessageHandler {
     private Client client;
     private ChessBoard chessBoardPrinter = new ChessBoard();
+    private Scanner scanner;
 
     public void main() {
         run();
@@ -18,6 +20,7 @@ public class Repl implements ServerMessageHandler {
 
     public Repl() {
         client = new Client(this);
+        scanner = new Scanner(System.in);
     }
 
     public void run() {
@@ -25,7 +28,7 @@ public class Repl implements ServerMessageHandler {
         System.out.print(client.help());
         System.out.println();
 
-        Scanner scanner = new Scanner(System.in);
+
         var result = "";
         while (!result.equals("quit")) {
             String line = scanner.nextLine();
@@ -40,6 +43,10 @@ public class Repl implements ServerMessageHandler {
             }
         }
         System.out.println();
+    }
+
+    public String getInput() {
+        return scanner.nextLine();
     }
 
 

@@ -1,6 +1,9 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import requests.*;
@@ -24,11 +27,13 @@ public class Client {
     private ChessGame.TeamColor teamColor;
     private int gameID;
     private chess.ChessBoard board = new chess.ChessBoard();
+    private Repl repl;
 
 
     public Client(Repl repl) {
         serverFacade = new ServerFacade("http://localhost:8080");
         webSocketFacade = new WebSocketFacade("http://localhost:8080", repl);
+        this.repl = repl;
         loggedIn = false;
     }
 
@@ -276,7 +281,42 @@ public class Client {
     }
 
     public String makeMove(String... params) {
-        return "not implemented";
+        String move = params[0];
+        if (move.length() != 4) {
+            return "Unreccognized move, please provide a move of the form a1b2\n";
+        }
+        String start = move.substring(0,2);
+        String end = move.substring(2,4);
+
+        try {
+            ChessPosition startPosition = generatePosition(start);
+            ChessPosition endPosition = generatePosition(end);
+            ChessPiece.PieceType promotionPiece = null;
+            if (board.getPiece(startPosition).getPieceType().equals(ChessPiece.PieceType.PAWN) && startPosition.getRow() == 7) {
+                do {
+                    System.out.println("What would you like to update your pawn to be?");
+                    System.out.println("(q)ueen, (b)ishop, (k)night, or (r)ook?\n");
+                    String pieceType = repl.getInput();
+                    switch (pieceType) {
+                        case "q" -> promotionPiece = ChessPiece.PieceType.QUEEN;
+                        case "b" -> promotionPiece = ChessPiece.PieceType.BISHOP;
+                        case "k" -> promotionPiece = ChessPiece.PieceType.KNIGHT;
+                        case "r" -> promotionPiece = ChessPiece.PieceType.ROOK;
+                        default -> {
+                            System.out.println("Unrecognized input. Please input 'q' 'b' k' or 'r'\n");
+                        }
+                    }
+                } while (promotionPiece == null);
+            }
+            ChessMove chessMove = new ChessMove(startPosition, endPosition, promotionPiece);
+
+
+            return "unfinsihed";
+        } catch (IOException e) {
+            return "Unrecognized move. Values should range from a-h and 1-8\n";
+        }
+
+
     }
 
     public String resign() {
@@ -298,5 +338,14 @@ public class Client {
 
     public void printBoard() {
         chessBoardPrinter.printBoard(teamColor, board);
+    }
+
+    public ChessPosition generatePosition(String pos) throws IOException {
+        int row = pos.charAt(1) - 48;
+        int col = pos.charAt(0) - 'a' + 1;
+        if (row > 8 || row < 1 || col > 8 || col < 1) {
+            throw new IOException("Invalid position");
+        }
+        return new ChessPosition(row, col);
     }
 }
