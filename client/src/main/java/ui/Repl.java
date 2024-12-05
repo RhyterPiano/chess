@@ -55,8 +55,7 @@ public class Repl implements ServerMessageHandler {
         ChessGame.TeamColor teamColor = client.getTeamColor();
         chessBoardPrinter.printBoard(teamColor, board);
 
-        String message = String.format("You are now viewing the game from the %s team position", teamColor.toString());
-        System.out.println(message);
+        System.out.println(client.help());
     }
 
     @Override

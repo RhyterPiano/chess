@@ -16,7 +16,7 @@ public class Client {
     private ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
     private boolean loggedIn;
-    private boolean inGame;
+    private boolean inGame = false;
     private HashMap<Integer, GameData> listOfGames;
     private ChessBoard chessBoardPrinter = new ChessBoard();
     private String username;
@@ -91,7 +91,7 @@ public class Client {
                     -create <game>
                     -list
                     -play <id> [WHITE|BLACK]
-                    -observe <id>
+                    -observe <id> [WHITE|BLACK]
                     """;
         }
         return """
@@ -153,10 +153,21 @@ public class Client {
     private String observeGame(String... params) {
         try {
             int gameNumber = Integer.parseInt(params[0]);
-            chessBoardPrinter.printBoard(ChessGame.TeamColor.WHITE, new chess.ChessGame().getBoard());
-            System.out.println();
-            chessBoardPrinter.printBoard(ChessGame.TeamColor.BLACK, new chess.ChessGame().getBoard());
-            return String.format("Congradulations! You are now observing game %d from both sides!\n", gameNumber);
+            int gameID = listOfGames.get(gameNumber).gameID();
+            String teamColor = params[1];
+            switch(teamColor) {
+                case "white" -> this.teamColor = ChessGame.TeamColor.WHITE;
+                case "black" -> this.teamColor = ChessGame.TeamColor.BLACK;
+                default -> {
+                    return "Unrecognized color, please try again\n";
+                }
+            };
+            AuthData authData = new AuthData(authToken, username);
+            webSocketFacade.connectGame(authData, gameID);
+            this.inGame = true;
+
+            return String.format("Now observing game %d from the %s color pov", gameNumber, this.teamColor);
+
         } catch (Exception e) {
             return "Invalid game ID given\n";
         }
@@ -180,6 +191,7 @@ public class Client {
 
             AuthData authData = new AuthData(authToken, username);
             webSocketFacade.connectGame(authData, gameID);
+            inGame = true;
 
             return String.format("Congradulations! You are now in game %d playing as the %s color\n", gameNumber, this.teamColor);
         } catch (Exception e) {
@@ -248,7 +260,9 @@ public class Client {
     }
 
     public String leave() {
+        inGame = false;
         return "not implemented";
+        //don't forget to reprint the help menu
     }
 
     public String makeMove(String... params) {
