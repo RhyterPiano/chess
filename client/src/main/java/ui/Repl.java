@@ -52,8 +52,8 @@ public class Repl implements ServerMessageHandler {
     public void loadGame(ServerMessage loadGameMessage) {
         GameData gameData = loadGameMessage.getGame();
         chess.ChessBoard board = gameData.game().getBoard();
-        ChessGame.TeamColor teamColor = client.getTeamColor();
-        chessBoardPrinter.printBoard(teamColor, board);
+        client.setBoard(board);
+        client.printBoard();
 
         System.out.println(client.help());
     }

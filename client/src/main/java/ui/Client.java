@@ -23,6 +23,8 @@ public class Client {
     private AuthData authData;
     private ChessGame.TeamColor teamColor;
     private int gameID;
+    private chess.ChessBoard board = new chess.ChessBoard();
+
 
     public Client(Repl repl) {
         serverFacade = new ServerFacade("http://localhost:8080");
@@ -256,7 +258,8 @@ public class Client {
     }
 
     public String redrawBoard() {
-        return "not implemented";
+        chessBoardPrinter.printBoard(teamColor, board);
+        return "";
     }
 
     public String leave() {
@@ -282,5 +285,13 @@ public class Client {
 
     public String showMoves(String... params) {
         return "not implemented";
+    }
+
+    public void setBoard(chess.ChessBoard board) {
+        this.board = board;
+    }
+
+    public void printBoard() {
+        chessBoardPrinter.printBoard(teamColor, board);
     }
 }
