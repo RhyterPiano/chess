@@ -280,7 +280,12 @@ public class Client {
     }
 
     public String resign() {
-        return "not implemented";
+        try {
+            webSocketFacade.resign(authData, gameID);
+            return "Successfully resigned from the game.\n";
+        } catch (IOException e) {
+            return "Error when trying to leave the game:(\n";
+        }
     }
 
     public String showMoves(String... params) {

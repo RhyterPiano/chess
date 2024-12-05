@@ -6,7 +6,6 @@ import websocket.commands.UserGameCommand;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import com.google.gson.Gson;
 
 public class WebSocketFacade extends Endpoint {
@@ -47,23 +46,21 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void connectGame(AuthData user, int gameID) throws IOException {
-        try {
-            var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT,
-                    user.authToken(), gameID, null, null);
-            this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
-        } catch (IOException e) {
-            throw e;
-        }
+        var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT,
+                user.authToken(), gameID, null, null);
+        this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
     }
 
     public void leaveGame(AuthData user, int gameID) throws IOException {
-        try {
-            var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
-                    user.authToken(), gameID, null, null);
-            this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
-        } catch (IOException e) {
-            throw e;
-        }
+        var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
+                user.authToken(), gameID, null, null);
+        this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
+    }
+
+    public void resign(AuthData user, int gameID) throws IOException {
+        var userGameCommand = new UserGameCommand(UserGameCommand.CommandType.RESIGN,
+                user.authToken(), gameID, null, null);
+        this.session.getBasicRemote().sendText(serializer.toJson(userGameCommand));
     }
 
 
