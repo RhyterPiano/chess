@@ -303,20 +303,7 @@ public class Client {
                 default -> promotionRow = 0;
             }
             if (myPiece.getPieceType().equals(ChessPiece.PieceType.PAWN) && startPosition.getRow() == promotionRow) {
-                do {
-                    System.out.println("What would you like to update your pawn to be?");
-                    System.out.println("(q)ueen, (b)ishop, (k)night, or (r)ook?\n");
-                    String pieceType = repl.getInput();
-                    switch (pieceType) {
-                        case "q" -> promotionPiece = ChessPiece.PieceType.QUEEN;
-                        case "b" -> promotionPiece = ChessPiece.PieceType.BISHOP;
-                        case "k" -> promotionPiece = ChessPiece.PieceType.KNIGHT;
-                        case "r" -> promotionPiece = ChessPiece.PieceType.ROOK;
-                        default -> {
-                            System.out.println("Unrecognized input. Please input 'q' 'b' k' or 'r'\n");
-                        }
-                    }
-                } while (promotionPiece == null);
+                promotionPiece = choosePromotionPiece();
             }
             ChessMove chessMove = new ChessMove(startPosition, endPosition, promotionPiece);
 
@@ -363,5 +350,24 @@ public class Client {
             throw new IOException("Invalid position");
         }
         return new ChessPosition(row, col);
+    }
+
+    public ChessPiece.PieceType choosePromotionPiece() {
+        ChessPiece.PieceType promotionPiece = null;
+        do {
+            System.out.println("What would you like to update your pawn to be?");
+            System.out.println("(q)ueen, (b)ishop, (k)night, or (r)ook?\n");
+            String pieceType = repl.getInput();
+            switch (pieceType) {
+                case "q" -> promotionPiece = ChessPiece.PieceType.QUEEN;
+                case "b" -> promotionPiece = ChessPiece.PieceType.BISHOP;
+                case "k" -> promotionPiece = ChessPiece.PieceType.KNIGHT;
+                case "r" -> promotionPiece = ChessPiece.PieceType.ROOK;
+                default -> {
+                    System.out.println("Unrecognized input. Please input 'q' 'b' k' or 'r'\n");
+                }
+            }
+        } while (promotionPiece == null);
+        return promotionPiece;
     }
 }

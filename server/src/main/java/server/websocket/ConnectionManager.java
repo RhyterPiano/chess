@@ -40,22 +40,6 @@ public class ConnectionManager {
         }
     }
 
-    public void broadcast(String excludeVisitorName, ServerMessage message) throws IOException {
-        var removeList = new ArrayList<Connection>();
-        for (var c : connections.values()) {
-            if (c.session.isOpen()) {
-                if (!c.visitorName.equals(excludeVisitorName)) {
-                    c.send(message.toString());
-                }
-            } else {
-                removeList.add(c);
-            }
-        }
-        for (var c : removeList) {
-            connections.remove(c.visitorName);
-        }
-    }
-
     public void alertJoin(int gameID, String username) throws IOException {
         if (gameList.get(gameID) != null) {
             for (String user : gameList.get(gameID)) {
