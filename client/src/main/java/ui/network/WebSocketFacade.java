@@ -2,7 +2,6 @@ package ui.network;
 
 import chess.ChessMove;
 import model.AuthData;
-import org.eclipse.jetty.server.Authentication;
 import websocket.messages.ServerMessage;
 import websocket.commands.UserGameCommand;
 import javax.websocket.*;
