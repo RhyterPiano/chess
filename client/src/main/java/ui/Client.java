@@ -302,6 +302,9 @@ public class Client {
             if (myPiece == null) {
                 return "There is no piece at the starting position, please try again\n";
             }
+            if (myPiece.getTeamColor() != teamColor) {
+                return "This piece does not belong to you\n";
+            }
             switch (myPiece.getTeamColor()) {
                 case WHITE -> promotionRow = 7;
                 case BLACK -> promotionRow = 1;
@@ -328,6 +331,11 @@ public class Client {
     }
 
     public String resign() {
+        System.out.println("Are you sure you want to resign? (y)(n)\n");
+        String response = repl.getInput();
+        if (!response.equals("y")) {
+            return "Keep playing";
+        }
         try {
             webSocketFacade.resign(authData, gameID);
             return "Successfully resigned from the game.\n";

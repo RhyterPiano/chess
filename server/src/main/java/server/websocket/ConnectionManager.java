@@ -40,12 +40,12 @@ public class ConnectionManager {
         }
     }
 
-    public void alertJoin(int gameID, String username) throws IOException {
+    public void alertJoin(int gameID, String username, String color) throws IOException {
         if (gameList.get(gameID) != null) {
             for (String user : gameList.get(gameID)) {
                 Connection c = connections.get(user);
                 if (c.session.isOpen()) {
-                    String message = String.format("%s has joined the game!", username);
+                    String message = String.format("%s has joined the game as %s", username, color);
                     sendNotification(c, message);
                 }
             }
@@ -82,10 +82,25 @@ public class ConnectionManager {
         if (gameList.get(gameID) != null) {
             for (String user : gameList.get(gameID)) {
                 Connection c = connections.get(user);
-                if (c.session.isOpen() && !user.equals(username)) {
+                if (c.session.isOpen()) {
                     String message = String.format("%s has made a move! They performed the move %s", username, move.toString());
                     if (condition != null) {
                         message = message + String.format("\nThe game is now in %s!", condition);
+                    }
+                    sendNotification(c, message);
+                }
+            }
+        }
+    }
+
+    public void sendAlert(String username, String otherUser, int gameID, String condition) throws IOException {
+        if (gameList.get(gameID) != null) {
+            for (String user : gameList.get(gameID)) {
+                Connection c = connections.get(user);
+                if (c.session.isOpen()) {
+                    String message = String.format("%s has put %s in %s\n", username, otherUser, condition);
+                    if (!condition.equals("Check!")) {
+                        message = message + "The game is now over";
                     }
                     sendNotification(c, message);
                 }

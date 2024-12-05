@@ -36,8 +36,11 @@ public class ChessMove {
 
     @Override
     public String toString() {
-
-        return endPosition.toString();
+        StringBuilder myString = new StringBuilder();
+        myString.append(startPosition.toString());
+        myString.append(" to ");
+        myString.append(endPosition.toString());
+        return myString.toString();
     }
 
     @Override

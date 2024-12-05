@@ -99,7 +99,16 @@ public class WebSocketHandler {
         message.setGame(chessGame);
         String finalMessage = serializer.toJson(message);
         session.getRemote().sendString(finalMessage);
-        connectionManager.alertJoin(gameID, username);
+        String color;
+        if (username.equals(chessGame.whiteUsername())) {
+            color = "the white color!";
+        } else if (username.equals(chessGame.blackUsername())){
+            color = "the black color!";
+        } else {
+            color = "an observer";
+        }
+
+        connectionManager.alertJoin(gameID, username, color);
         connectionManager.add(username, session, command.getGameID());
     }
 
@@ -137,7 +146,16 @@ public class WebSocketHandler {
         }
 
         connectionManager.alertGameUpdate(gameData.gameID(), gameData);
-        connectionManager.alertNotification(username, gameData.gameID(), move, condition);
+        connectionManager.alertNotification(username, gameData.gameID(), move, null);
+        if (condition != null) {
+            String otherUser;
+            if (username.equals(gameData.whiteUsername())) {
+                otherUser = gameData.blackUsername();
+            } else {
+                otherUser = gameData.whiteUsername();
+            }
+            connectionManager.sendAlert(username, otherUser, gameData.gameID(), condition);
+        }
 
 
 
