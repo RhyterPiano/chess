@@ -8,6 +8,7 @@ import results.*;
 import ui.network.ServerFacade;
 import ui.network.WebSocketFacade;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,9 +20,9 @@ public class Client {
     private boolean inGame = false;
     private HashMap<Integer, GameData> listOfGames;
     private ChessBoard chessBoardPrinter = new ChessBoard();
-    private String username;
-    private String authToken;
+    private AuthData authData;
     private ChessGame.TeamColor teamColor;
+    private int gameID;
 
     public Client(Repl repl) {
         serverFacade = new ServerFacade("http://localhost:8080");
@@ -105,9 +106,10 @@ public class Client {
     public String login(String... params) {
        try {
            LoginRequest request = new LoginRequest(params[0], params[1]);
-           this.authToken = serverFacade.login(request);
+           String authToken = serverFacade.login(request);
            loggedIn = true;
-           this.username = request.username();
+           String username = request.username();
+           this.authData = new AuthData(authToken, username);
            return String.format("Logged in as %s.\n%s\n", request.username(), help());
        } catch (Exception e) {
            String errorMessage = "";
@@ -123,9 +125,10 @@ public class Client {
     public String register(String... params) {
         try {
             RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
-            this.authToken = serverFacade.register(request);
+            String authToken = serverFacade.register(request);
             loggedIn = true;
-            this.username = request.username();
+            String username = request.username();
+            this.authData = new AuthData(authToken, username);
             return String.format("Registered user %s, you are now logged in!", request.username());
         } catch (Exception e) {
             String errorMessage = "";
@@ -142,8 +145,7 @@ public class Client {
         try {
             serverFacade.logout();
             loggedIn = false;
-            this.username = null;
-            this.authToken = null;
+            this.authData = null;
             return String.format("Successfully logged out!\n%s", help());
         } catch (Exception e) {
             return e.getMessage();
@@ -153,7 +155,7 @@ public class Client {
     private String observeGame(String... params) {
         try {
             int gameNumber = Integer.parseInt(params[0]);
-            int gameID = listOfGames.get(gameNumber).gameID();
+            this.gameID = listOfGames.get(gameNumber).gameID();
             String teamColor = params[1];
             switch(teamColor) {
                 case "white" -> this.teamColor = ChessGame.TeamColor.WHITE;
@@ -162,8 +164,7 @@ public class Client {
                     return "Unrecognized color, please try again\n";
                 }
             };
-            AuthData authData = new AuthData(authToken, username);
-            webSocketFacade.connectGame(authData, gameID);
+            webSocketFacade.connectGame(this.authData, this.gameID);
             this.inGame = true;
 
             return String.format("Now observing game %d from the %s color pov", gameNumber, this.teamColor);
@@ -176,7 +177,7 @@ public class Client {
     private String playGame(String... params) {
         try {
         int gameNumber = Integer.parseInt(params[0]);
-        int gameID = listOfGames.get(gameNumber).gameID();
+        this.gameID = listOfGames.get(gameNumber).gameID();
         String teamColor = params[1];
         switch(teamColor) {
             case "white" -> this.teamColor = ChessGame.TeamColor.WHITE;
@@ -186,11 +187,10 @@ public class Client {
             }
 
         }
-            JoinGameRequest request = new JoinGameRequest(this.teamColor, gameID);
+            JoinGameRequest request = new JoinGameRequest(this.teamColor, this.gameID);
             serverFacade.joinGame(request);
 
-            AuthData authData = new AuthData(authToken, username);
-            webSocketFacade.connectGame(authData, gameID);
+            webSocketFacade.connectGame(this.authData, this.gameID);
             inGame = true;
 
             return String.format("Congradulations! You are now in game %d playing as the %s color\n", gameNumber, this.teamColor);
@@ -260,9 +260,16 @@ public class Client {
     }
 
     public String leave() {
+        try {
+            webSocketFacade.leaveGame(authData, gameID);
+            this.gameID = -1;
+
+        } catch (IOException e) {
+            return "Error when trying to leave the game:(\n";
+        }
+
         inGame = false;
-        return "not implemented";
-        //don't forget to reprint the help menu
+        return "Successfully left the game!\n" + help();
     }
 
     public String makeMove(String... params) {

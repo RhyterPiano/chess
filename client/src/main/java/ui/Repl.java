@@ -45,7 +45,7 @@ public class Repl implements ServerMessageHandler {
 
     @Override
     public void notify(ServerMessage serverMessage) {
-        System.out.println("%s\n\n");
+        System.out.println(serverMessage.getMessage());
     }
 
     @Override
@@ -60,6 +60,6 @@ public class Repl implements ServerMessageHandler {
 
     @Override
     public void notifyError(ServerMessage errorMessage) {
-
+        System.out.println(errorMessage.getErrorMessage());
     }
 }
