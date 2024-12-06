@@ -82,7 +82,7 @@ public class ConnectionManager {
         if (gameList.get(gameID) != null) {
             for (String user : gameList.get(gameID)) {
                 Connection c = connections.get(user);
-                if (c.session.isOpen()) {
+                if (c.session.isOpen() && !username.equals(user)) {
                     String message = String.format("%s has made a move! They performed the move %s", username, move.toString());
                     if (condition != null) {
                         message = message + String.format("\nThe game is now in %s!", condition);
